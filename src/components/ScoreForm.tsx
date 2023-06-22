@@ -1,15 +1,18 @@
 import {
+  Button,
   Checkbox,
   FormControlLabel,
   Grid,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import TubeScore from './TubeScore';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '..';
+import { Add, Remove } from '@mui/icons-material';
 
 export type CapOptions = 'blue' | 'red' | '';
 
@@ -27,6 +30,7 @@ export type ScoreData = {
   midTubeCapped: CapOptions;
   closeTubeBalls: number;
   closeTubeCapped: CapOptions;
+  penalties: number;
 };
 
 interface ScoreFormProps {
@@ -46,6 +50,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     midTubeCapped: '',
     closeTubeBalls: 0,
     closeTubeCapped: '',
+    penalties: 0,
   });
 
   useEffect(() => {
@@ -174,6 +179,34 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             <ToggleButton value='touch'>Touch</ToggleButton>
             <ToggleButton value='none'>None</ToggleButton>
           </ToggleButtonGroup>
+        </Grid>
+        <Grid item xs={4}>
+          <label>Penalties:</label>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant='h1' component='div' color={teamColor}>
+            {score.penalties}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            variant='contained'
+            onClick={() =>
+              setScore({ ...score, penalties: score.penalties + 1 })
+            }
+          >
+            <Remove />
+          </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            variant='contained'
+            onClick={() =>
+              setScore({ ...score, penalties: score.penalties + 1 })
+            }
+          >
+            <Add />
+          </Button>
         </Grid>
       </Grid>
     </div>

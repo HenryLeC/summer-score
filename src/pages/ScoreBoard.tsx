@@ -71,6 +71,8 @@ function ScoreBoard() {
       return score;
     }
 
+    score += otherTeam.penalties * 5;
+
     if (otherTeam.farTubeCapped === team.teamColor) {
       score += calculateTubeScore(otherTeam.farTubeBalls, '', team.teamColor);
     }
