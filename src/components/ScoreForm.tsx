@@ -192,7 +192,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
           <Button
             variant='contained'
             onClick={() =>
-              setScore({ ...score, penalties: score.penalties + 1 })
+              setScore({ ...score, penalties: score.penalties - 1 })
             }
           >
             <Remove />
