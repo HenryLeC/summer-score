@@ -1,10 +1,11 @@
 import { Grid, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import TeamScorePaper from '../components/TeamScorePaper';
 import { CapOptions, ClimbType, ScoreData } from '../components/ScoreForm';
 import { db } from '..';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { MatchData } from './ScoreIndex';
+import MatchTimer from '../components/MatchTimer';
 
 type FullScore = {
   red: ScoreData | null;
@@ -111,6 +112,8 @@ function ScoreBoard() {
     };
   }, []);
 
+  const [open, setOpen] = useState(false);
+
   return (
     <div>
       <center>
@@ -133,6 +136,13 @@ function ScoreBoard() {
             score={calculateScore(score.red, score.blue)}
           />
         </Grid>
+        {open ? (
+          <Grid item xs={12}>
+            <MatchTimer />
+          </Grid>
+        ) : (
+          <div onClick={() => setOpen(true)}>Open Timer</div>
+        )}
       </Grid>
     </div>
   );
