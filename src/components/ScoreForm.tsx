@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import TubeScore from './TubeScore';
+import CounterScore from './CounterScore';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '..';
 import { Add, Remove } from '@mui/icons-material';
@@ -24,12 +24,8 @@ export type ScoreData = {
   scoredAuto: boolean;
   autoClimb: ClimbType;
   endClime: ClimbType;
-  farTubeBalls: number;
-  farTubeCapped: CapOptions;
-  midTubeBalls: number;
-  midTubeCapped: CapOptions;
-  closeTubeBalls: number;
-  closeTubeCapped: CapOptions;
+  cubesPlaced: number;
+  ducksScored: number;
   penalties: number;
 };
 
@@ -44,12 +40,8 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     scoredAuto: false,
     autoClimb: 'none',
     endClime: 'none',
-    farTubeBalls: 0,
-    farTubeCapped: '',
-    midTubeBalls: 0,
-    midTubeCapped: '',
-    closeTubeBalls: 0,
-    closeTubeCapped: '',
+    cubesPlaced: 0,
+    ducksScored: 0,
     penalties: 0,
   });
 
@@ -69,7 +61,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 teamName: event.target.value,
               });
             }}
-            label='Team Name'
+            label="Team Name"
           />
         </Grid>
         <Grid item xs={6}>
@@ -85,7 +77,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label='Scored Auto'
+            label="Scored Auto"
           />
         </Grid>
         <Grid item xs={6}>
@@ -100,65 +92,38 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               });
             }}
           >
-            <ToggleButton value='climb'>Climb</ToggleButton>
-            <ToggleButton value='touch'>Touch</ToggleButton>
-            <ToggleButton value='none'>None</ToggleButton>
+            <ToggleButton value="climb">Climb</ToggleButton>
+            <ToggleButton value="touch">Touch</ToggleButton>
+            <ToggleButton value="none">None</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
 
         <>
-          <TubeScore
-            count={score.farTubeBalls}
+          <CounterScore
+            count={score.cubesPlaced}
             setCount={(count) =>
               setScore({
                 ...score,
-                farTubeBalls: count,
-              })
-            }
-            capped={score.farTubeCapped}
-            setCap={(capped) =>
-              setScore({
-                ...score,
-                farTubeCapped: capped,
+                cubesPlaced: count,
               })
             }
             teamColor={teamColor}
+            title="Cubes"
+            buttonColor="warning"
           />
           <div style={{ height: '10px' }} />
-          <TubeScore
-            count={score.midTubeBalls}
+
+          <CounterScore
+            count={score.ducksScored}
             setCount={(count) =>
               setScore({
                 ...score,
-                midTubeBalls: count,
-              })
-            }
-            capped={score.midTubeCapped}
-            setCap={(capped) =>
-              setScore({
-                ...score,
-                midTubeCapped: capped,
+                ducksScored: count,
               })
             }
             teamColor={teamColor}
-          />
-          <div style={{ height: '10px' }} />
-          <TubeScore
-            count={score.closeTubeBalls}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                closeTubeBalls: count,
-              })
-            }
-            capped={score.closeTubeCapped}
-            setCap={(capped) =>
-              setScore({
-                ...score,
-                closeTubeCapped: capped,
-              })
-            }
-            teamColor={teamColor}
+            title="Ducks!"
+            buttonColor="secondary"
           />
         </>
 
@@ -175,22 +140,22 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               });
             }}
           >
-            <ToggleButton value='climb'>Climb</ToggleButton>
-            <ToggleButton value='touch'>Touch</ToggleButton>
-            <ToggleButton value='none'>None</ToggleButton>
+            <ToggleButton value="climb">Climb</ToggleButton>
+            <ToggleButton value="touch">Touch</ToggleButton>
+            <ToggleButton value="none">None</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
         <Grid item xs={4}>
           <label>Penalties:</label>
         </Grid>
         <Grid item xs={2}>
-          <Typography variant='h1' component='div' color={teamColor}>
+          <Typography variant="h1" component="div" color={teamColor}>
             {score.penalties}
           </Typography>
         </Grid>
         <Grid item xs={2}>
           <Button
-            variant='contained'
+            variant="contained"
             onClick={() =>
               setScore({ ...score, penalties: score.penalties - 1 })
             }
@@ -200,7 +165,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
         </Grid>
         <Grid item xs={2}>
           <Button
-            variant='contained'
+            variant="contained"
             onClick={() =>
               setScore({ ...score, penalties: score.penalties + 1 })
             }

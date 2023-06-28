@@ -1,8 +1,8 @@
-import { doc, setDoc } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
-import { db } from '..';
-import { Link } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { doc, setDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "..";
+import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export type MatchData = {
   name: string;
@@ -10,11 +10,11 @@ export type MatchData = {
 
 function ScoreIndex() {
   const [match, setMatch] = useState<MatchData>({
-    name: '',
+    name: "",
   });
 
   useEffect(() => {
-    setDoc(doc(db, 'realtime', 'root'), match);
+    setDoc(doc(db, "realtime", "root"), match);
   }, [match]);
 
   return (
@@ -22,20 +22,23 @@ function ScoreIndex() {
       <center>
         <h1>Score Index</h1>
         <input
-          type='text'
+          type="text"
           value={match.name}
           onChange={(e) => setMatch({ name: e.target.value })}
         />
         <br />
-        <Link to='/score/red'>Red</Link>
+        <Link to="/score/red">Red</Link>
         <br />
-        <Link to='/score/blue'>Blue</Link>
+        <Link to="/score/blue">Blue</Link>
+        <br />
+        <Link to="/config">Config</Link>
+        <br />
 
         <Button
           onClick={() => {
-            setDoc(doc(db, 'realtime', 'timer'), { start: true });
+            setDoc(doc(db, "realtime", "timer"), { start: true });
             setTimeout(() => {
-              setDoc(doc(db, 'realtime', 'timer'), { start: false });
+              setDoc(doc(db, "realtime", "timer"), { start: false });
             }, 5000);
           }}
         >
