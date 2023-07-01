@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography } from "@mui/material";
 
 interface TeamScorePaperProps {
   teamName: string;
@@ -8,24 +8,24 @@ interface TeamScorePaperProps {
 
 function TeamScorePaper({ teamName, teamColor, score }: TeamScorePaperProps) {
   return (
-    <Paper elevation={3} style={{ backgroundColor: 'black', color: 'white' }}>
+    <Paper elevation={3} style={{ backgroundColor: "black", color: "white" }}>
       <center>
         <Typography
-          variant='h4'
-          component='div'
+          variant="h4"
+          component="div"
           color={teamColor}
           style={{
-            WebkitTextStroke: '2px white',
+            WebkitTextStroke: "2px white",
           }}
         >
           {teamName}
         </Typography>
         <Typography
-          variant='h1'
-          component='div'
+          variant="h1"
+          component="div"
           color={teamColor}
           style={{
-            WebkitTextStroke: '2px white',
+            WebkitTextStroke: "2px white",
           }}
         >
           {score}

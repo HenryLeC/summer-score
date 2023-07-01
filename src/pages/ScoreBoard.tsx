@@ -1,15 +1,26 @@
 import { Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import TeamScorePaper from '../components/TeamScorePaper';
-import { CapOptions, ClimbType, ScoreData } from '../components/ScoreForm';
+import { ClimbType, ScoreData } from '../components/ScoreForm';
 import { db } from '..';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { MatchData } from './ScoreIndex';
 import MatchTimer from '../components/MatchTimer';
 
 type FullScore = {
   red: ScoreData | null;
   blue: ScoreData | null;
+};
+
+type PointsConfig = {
+  fullClimb: number;
+  touchClimb: number;
+  scoredInAuto: number;
+  spinnedInAuto: number;
+  cubeValue: number;
+  duckValue: number;
+  penalties: number;
+  tipBonus: number;
 };
 
 function ScoreBoard() {
@@ -22,24 +33,27 @@ function ScoreBoard() {
     name: '',
   });
 
+  const [pointConfig, setPointConfig] = React.useState<PointsConfig>({
+    fullClimb: 0,
+    touchClimb: 0,
+    scoredInAuto: 0,
+    spinnedInAuto: 0,
+    cubeValue: 0,
+    duckValue: 0,
+    penalties: 0,
+    tipBonus: 0,
+  });
+
   const climbScore = (climb: ClimbType) => {
     switch (climb) {
       case 'climb':
-        return 10;
+        return pointConfig.fullClimb;
       case 'touch':
-        return 5;
+        return pointConfig.touchClimb;
       default:
         return 0;
     }
   };
-
-  const calculateTubeScore = (
-    count: number,
-    capped: CapOptions,
-    team: string
-  ) =>
-    (count * count + 3 * count) * (capped === team ? 2 : 1) +
-    (capped === team ? 10 : 0);
 
   const calculateScore = (
     team: ScoreData | null,
@@ -49,40 +63,24 @@ function ScoreBoard() {
       return 0;
     }
     let score = 0;
-    score += team.scoredAuto ? 5 : 0;
+    score += team.scoredAuto ? pointConfig.scoredInAuto : 0;
+    score += team.spinnedInAuto ? pointConfig.spinnedInAuto : 0;
     score += climbScore(team.autoClimb);
     score += climbScore(team.endClime);
-    score += calculateTubeScore(
-      team.farTubeBalls,
-      team.farTubeCapped,
-      team.teamColor
-    );
-    score += calculateTubeScore(
-      team.midTubeBalls,
-      team.midTubeCapped,
-      team.teamColor
-    );
-    score += calculateTubeScore(
-      team.closeTubeBalls,
-      team.closeTubeCapped,
-      team.teamColor
-    );
+
+    score += team.cubesPlaced * pointConfig.cubeValue;
+    score += team.ducksScored * pointConfig.duckValue;
 
     if (otherTeam === null) {
       return score;
     }
 
-    score += otherTeam.penalties * 5;
+    if (team.cubesPlaced > otherTeam.cubesPlaced) {
+      score += pointConfig.tipBonus;
+    }
 
-    if (otherTeam.farTubeCapped === team.teamColor) {
-      score += calculateTubeScore(otherTeam.farTubeBalls, '', team.teamColor);
-    }
-    if (otherTeam.midTubeCapped === team.teamColor) {
-      score += calculateTubeScore(otherTeam.midTubeBalls, '', team.teamColor);
-    }
-    if (otherTeam.closeTubeCapped === team.teamColor) {
-      score += calculateTubeScore(otherTeam.closeTubeBalls, '', team.teamColor);
-    }
+    score += otherTeam.penalties * pointConfig.penalties;
+
     return score;
   };
 
@@ -105,6 +103,10 @@ function ScoreBoard() {
       setMatch(doc.data() as MatchData);
     });
 
+    getDoc(doc(db, 'realtime', 'points')).then((doc) => {
+      setPointConfig(doc.data() as PointsConfig);
+    });
+
     return () => {
       unsubscribeRed();
       unsubscribeBlue();
@@ -117,21 +119,21 @@ function ScoreBoard() {
   return (
     <div>
       <center>
-        <Typography variant='h2' component='div'>
+        <Typography variant="h2" component="div">
           {match.name}
         </Typography>
       </center>
       <Grid container spacing={10} padding={10}>
         <Grid item xs={6}>
           <TeamScorePaper
-            teamColor='blue'
+            teamColor="blue"
             teamName={score.blue?.teamName ?? 'Blue'}
             score={calculateScore(score.blue, score.red)}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
-            teamColor='red'
+            teamColor="red"
             teamName={score.red?.teamName ?? 'Red'}
             score={calculateScore(score.red, score.blue)}
           />

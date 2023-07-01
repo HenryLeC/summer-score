@@ -22,14 +22,15 @@ function ScoreIndex() {
       <center>
         <h1>Score Index</h1>
         <input
-          type='text'
+          type="text"
           value={match.name}
           onChange={(e) => setMatch({ name: e.target.value })}
         />
         <br />
-        <Link to='/score/red'>Red</Link>
+        <Link to="/score/red">Red</Link>
         <br />
-        <Link to='/score/blue'>Blue</Link>
+        <Link to="/score/blue">Blue</Link>
+        <br />
 
         <Button
           onClick={() => {
