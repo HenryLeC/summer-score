@@ -17,8 +17,13 @@ function CounterScore({
   buttonColor,
 }: CounterScoreProps) {
   return (
-    <>
-      <label>{title}</label>
+    <Grid container>
+      <Grid item xs={2}>
+        {' '}
+        <label>{title}</label>
+      </Grid>
+
+      <div style={{ width: '10px' }} />
 
       <Grid item xs={2}>
         <Typography variant="h4" component="span" color={teamColor}>
@@ -44,7 +49,7 @@ function CounterScore({
           <Add />
         </Button>
       </Grid>
-    </>
+    </Grid>
   );
 }
 

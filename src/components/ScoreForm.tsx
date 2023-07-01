@@ -27,6 +27,7 @@ export type ScoreData = {
   cubesPlaced: number;
   ducksScored: number;
   penalties: number;
+  spinnedInAuto: boolean;
 };
 
 interface ScoreFormProps {
@@ -43,6 +44,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     cubesPlaced: 0,
     ducksScored: 0,
     penalties: 0,
+    spinnedInAuto: false,
   });
 
   useEffect(() => {
@@ -98,7 +100,24 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
           </ToggleButtonGroup>
         </Grid>
 
-        <>
+        <Grid item xs={6}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={score.spinnedInAuto}
+                onChange={(_, value) => {
+                  setScore({
+                    ...score,
+                    spinnedInAuto: value,
+                  });
+                }}
+              />
+            }
+            label="Spinned In Auto"
+          />
+        </Grid>
+
+        <Grid item xs={12}>
           <CounterScore
             count={score.cubesPlaced}
             setCount={(count) =>
@@ -111,8 +130,9 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             title="Cubes"
             buttonColor="warning"
           />
-          <div style={{ height: '10px' }} />
+        </Grid>
 
+        <Grid item xs={12}>
           <CounterScore
             count={score.ducksScored}
             setCount={(count) =>
@@ -125,7 +145,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             title="Ducks!"
             buttonColor="secondary"
           />
-        </>
+        </Grid>
 
         <Grid item xs={12}>
           <label>End Game Climb</label>
