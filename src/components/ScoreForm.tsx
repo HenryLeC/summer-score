@@ -28,6 +28,7 @@ export type ScoreData = {
   ducksScored: number;
   penalties: number;
   spinnedInAuto: boolean;
+  tipBonus: boolean;
 };
 
 interface ScoreFormProps {
@@ -45,6 +46,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     ducksScored: 0,
     penalties: 0,
     spinnedInAuto: false,
+    tipBonus: false
   });
 
   useEffect(() => {
@@ -192,6 +194,23 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
           >
             <Add />
           </Button>
+        </Grid>
+
+        <Grid item xs={6}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={score.tipBonus}
+                onChange={(_, value) => {
+                  setScore({
+                    ...score,
+                    tipBonus: value,
+                  });
+                }}
+              />
+            }
+            label="Received Tip Bonus"
+          />
         </Grid>
       </Grid>
     </div>

@@ -71,12 +71,12 @@ function ScoreBoard() {
     score += team.cubesPlaced * pointConfig.cubeValue;
     score += team.ducksScored * pointConfig.duckValue;
 
-    if (otherTeam === null) {
-      return score;
+    if (team.tipBonus) {
+      score += pointConfig.tipBonus;
     }
 
-    if (team.cubesPlaced > otherTeam.cubesPlaced) {
-      score += pointConfig.tipBonus;
+    if (otherTeam === null) {
+      return score;
     }
 
     score += otherTeam.penalties * pointConfig.penalties;
