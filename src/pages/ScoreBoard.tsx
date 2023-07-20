@@ -163,16 +163,16 @@ function ScoreBoard() {
       <Grid container spacing={10} padding={10}>
         <Grid item xs={6}>
           <TeamScorePaper
-            teamColor="blue"
-            teamName={score.blue?.teamName ?? 'Blue'}
-            score={calculateScore(score.blue, score.red)}
+            teamColor="red"
+            teamName={score.red?.teamName ?? 'Red'}
+            score={calculateScore(score.red, score.blue)}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
-            teamColor="red"
-            teamName={score.red?.teamName ?? 'Red'}
-            score={calculateScore(score.red, score.blue)}
+            teamColor="blue"
+            teamName={score.blue?.teamName ?? 'Blue'}
+            score={calculateScore(score.blue, score.red)}
           />
         </Grid>
         {open ? (
