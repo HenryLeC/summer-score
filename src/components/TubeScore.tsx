@@ -88,7 +88,7 @@ function TubeScore({
       </Grid>
       <Grid item xs={2}>
         <Typography variant='h4' component='span' color={teamColor}>
-          {(count * 5) * (capped === teamColor ? 2 : 1) * (capped !== teamColor && capped !== "" ? 0 : 1)}
+          {(count * 5) * (capped === teamColor ? 2 : 1)}
         </Typography>
       </Grid>
       <Grid item xs={2}>

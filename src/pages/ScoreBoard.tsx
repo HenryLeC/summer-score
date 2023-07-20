@@ -62,7 +62,7 @@ function ScoreBoard() {
     capped: CapOptions,
     team: string
   ) =>
-    (count * pointConfig.pegCone) * (capped === team ? 2 : 1) * (capped !== team && capped !== "" ? 0 : 1);
+    (count * pointConfig.pegCone) * (capped === team ? 2 : 1);
 
   const calculateScore = (
     team: ScoreData | null,
