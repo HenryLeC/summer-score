@@ -41,7 +41,7 @@ function MatchTimer() {
   }, []);
 
   const count = useCallback(() => {
-    if (time === 20 && phase === 'auto') {
+    if (time === 30 && phase === 'auto') {
       console.log('Played Auto Sound');
       playAuto();
     }
