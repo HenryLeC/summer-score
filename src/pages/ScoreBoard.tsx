@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import TeamScorePaper from '../components/TeamScorePaper';
-import { ClimbType, ScoreData } from '../components/ScoreForm';
+import { CapOptions, ClimbType, ScoreData } from '../components/ScoreForm';
 import { db } from '..';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { MatchData } from './ScoreIndex';
@@ -15,12 +15,13 @@ type FullScore = {
 type PointsConfig = {
   fullClimb: number;
   touchClimb: number;
-  scoredInAuto: number;
-  spinnedInAuto: number;
-  cubeValue: number;
-  duckValue: number;
+  pegCone: number;
+  groundCone: number;
+  pegConeAutoBonus: number;
+  groundConeAutoBonus: number;
+  ballValue: number;
+  ballMultiplier: number;
   penalties: number;
-  tipBonus: number;
 };
 
 function ScoreBoard() {
@@ -36,12 +37,13 @@ function ScoreBoard() {
   const [pointConfig, setPointConfig] = React.useState<PointsConfig>({
     fullClimb: 0,
     touchClimb: 0,
-    scoredInAuto: 0,
-    spinnedInAuto: 0,
-    cubeValue: 0,
-    duckValue: 0,
-    penalties: 0,
-    tipBonus: 0,
+    pegCone: 0,
+    groundCone: 0,
+    pegConeAutoBonus: 0,
+    groundConeAutoBonus: 0,
+    ballValue: 0,
+    ballMultiplier: 0,
+    penalties: 0
   });
 
   const climbScore = (climb: ClimbType) => {
@@ -55,6 +57,13 @@ function ScoreBoard() {
     }
   };
 
+  const calculateTubeScore = (
+    count: number,
+    capped: CapOptions,
+    team: string
+  ) =>
+    (count * pointConfig.pegCone) * (capped === team ? 2 : 1) * (capped !== team && capped !== "" ? 0 : 1);
+
   const calculateScore = (
     team: ScoreData | null,
     otherTeam: ScoreData | null
@@ -63,20 +72,48 @@ function ScoreBoard() {
       return 0;
     }
     let score = 0;
-    score += team.scoredAuto ? pointConfig.scoredInAuto : 0;
-    score += team.spinnedInAuto ? pointConfig.spinnedInAuto : 0;
+
+
+
     score += climbScore(team.autoClimb);
     score += climbScore(team.endClime);
 
-    score += team.cubesPlaced * pointConfig.cubeValue;
-    score += team.ducksScored * pointConfig.duckValue;
+    score += calculateTubeScore(
+      team.leftPegCones,
+      team.leftPegCapped,
+      team.teamColor
+    );
+    
+    score += calculateTubeScore(
+      team.rightPegCones,
+      team.rightPegCapped,
+      team.teamColor
+    );
 
-    if (team.tipBonus) {
-      score += pointConfig.tipBonus;
+    score += team.groundCones * pointConfig.groundCone;
+    score += team.groundAutoBonus * pointConfig.groundConeAutoBonus;
+    
+
+    score += team.pegAutoBonus * pointConfig.pegConeAutoBonus;
+
+
+    if (team.ballMultiplier) {
+      score += team.balls * pointConfig.ballValue * pointConfig.ballMultiplier;
+    }
+    else
+    {
+      score += team.balls * pointConfig.ballValue; 
     }
 
     if (otherTeam === null) {
       return score;
+    }
+
+    if (otherTeam.leftPegCapped === team.teamColor) {
+      score += calculateTubeScore(otherTeam.leftPegCones, '', team.teamColor);
+    }
+    if (otherTeam.rightPegCapped === team.teamColor) {
+      score += calculateTubeScore(otherTeam.rightPegCones, '', team.teamColor);
     }
 
     score += otherTeam.penalties * pointConfig.penalties;

@@ -7,7 +7,7 @@ import useSound from 'use-sound';
 type MatchPhase = 'auto' | 'wait' | 'tele' | 'end';
 
 function MatchTimer() {
-  const [time, setTime] = useState<number>(20);
+  const [time, setTime] = useState<number>(30);
   const [started, setStarted] = useState<boolean>(false);
   const [phase, setPhase] = useState<MatchPhase>('auto');
 
