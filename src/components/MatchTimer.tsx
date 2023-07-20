@@ -30,7 +30,7 @@ function MatchTimer() {
     const unsub = onSnapshot(doc(db, 'realtime', 'timer'), (doc) => {
       if (doc.data()?.start === true) {
         setStarted(true);
-        setTime(20);
+        setTime(30);
         setPhase('auto');
       }
     });
