@@ -17,11 +17,17 @@ function MatchTimer() {
   const [playAuto] = useSound(
     process.env.PUBLIC_URL + '/audio/Start Auto_normalized.wav'
   );
-  const [playStart] = useSound(
-    process.env.PUBLIC_URL + '/audio/Start Teleop_normalized.wav'
+  const [playDriversPickUp] = useSound(
+    process.env.PUBLIC_URL + '/audio/Drivers_Pick_Up.mp3'
+  );
+  const [playEndAuto] = useSound(
+    process.env.PUBLIC_URL + '/audio/End_Auto.mp3'
+  );
+  const [play321] = useSound(
+    process.env.PUBLIC_URL + '/audio/3_2_1.mp3'
   );
   const [playEndGame] = useSound(
-    process.env.PUBLIC_URL + '/audio/Start of End Game_normalized.wav'
+    process.env.PUBLIC_URL + '/audio/Start of End Game.mp3'
   );
 
   const ref = useRef<any>(null);
@@ -42,32 +48,42 @@ function MatchTimer() {
 
   const count = useCallback(() => {
     if (time === 30 && phase === 'auto') {
-      console.log('Played Auto Sound');
       playAuto();
+      console.log('Played Auto Sound');
     }
 
     setTime((time) => time - 1);
 
-    if (time === 0) {
+    if (time === 1) {
       if (phase === 'auto') {
-        setTime(5);
-        playEnd();
+        setTime(7);
+        playEndAuto();
         setPhase('wait');
       } else if (phase === 'wait') {
-        setTime(90);
+        setTime(120);
         setPhase('tele');
-        playStart();
-      } else if (phase === 'tele') {
-        setTime(30);
-        setPhase('end');
-        playEndGame();
+        //playStart();
       } else if (phase === 'end') {
         setTime(0);
         playEnd();
         setStarted(false);
       }
     }
-  }, [phase, time, playAuto, playEnd, playStart, playEndGame]);
+
+    if (time === 7 && phase === 'wait') {
+      playDriversPickUp();
+    }
+
+    if (time === 4 && phase === 'wait') {
+      play321();
+    }
+
+    if (time === 31 && phase === 'tele') {
+      setPhase('end');
+      playEndGame();
+    }
+
+  }, [phase, time, playAuto, playEndAuto, play321, playDriversPickUp, playEnd, playEndGame]);
 
   useEffect(() => {
     if (ref.current || !started) clearInterval(ref.current);
