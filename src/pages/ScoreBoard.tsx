@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TeamScorePaper from "../components/TeamScorePaper";
-import { CapOptions, ClimbType, ScoreData } from "../components/ScoreForm";
+import { ClimbType, ScoreData } from "../components/ScoreForm";
 import { db } from "..";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { MatchData } from "./ScoreIndex";

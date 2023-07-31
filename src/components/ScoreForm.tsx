@@ -1,14 +1,9 @@
 import {
-  Box,
   Button,
   ButtonGroup,
   Checkbox,
-  FormControl,
   FormControlLabel,
-  FormLabel,
   Grid,
-  Radio,
-  RadioGroup,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -19,7 +14,6 @@ import CounterScore from "./CounterScore";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "..";
 import { Add, Remove } from "@mui/icons-material";
-import TubeScore from "./TubeScore";
 
 export type CapOptions = "blue" | "red" | "";
 
