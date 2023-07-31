@@ -1,11 +1,11 @@
-import { Grid, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import TeamScorePaper from '../components/TeamScorePaper';
-import { CapOptions, ClimbType, ScoreData } from '../components/ScoreForm';
-import { db } from '..';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { MatchData } from './ScoreIndex';
-import MatchTimer from '../components/MatchTimer';
+import { Grid, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import TeamScorePaper from "../components/TeamScorePaper";
+import { CapOptions, ClimbType, ScoreData } from "../components/ScoreForm";
+import { db } from "..";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { MatchData } from "./ScoreIndex";
+import MatchTimer from "../components/MatchTimer";
 
 type FullScore = {
   red: ScoreData | null;
@@ -15,12 +15,11 @@ type FullScore = {
 type PointsConfig = {
   fullClimb: number;
   touchClimb: number;
-  pegCone: number;
-  groundCone: number;
-  pegConeAutoBonus: number;
-  groundConeAutoBonus: number;
+  connectValue: number;
+  goldenBall: number;
   ballValue: number;
-  ballMultiplier: number;
+  humanBonus: number;
+  autoBonus: number
   penalties: number;
 };
 
@@ -31,89 +30,96 @@ function ScoreBoard() {
   });
 
   const [match, setMatch] = React.useState<MatchData>({
-    name: '',
+    name: "",
   });
 
   const [pointConfig, setPointConfig] = React.useState<PointsConfig>({
     fullClimb: 0,
     touchClimb: 0,
-    pegCone: 0,
-    groundCone: 0,
-    pegConeAutoBonus: 0,
-    groundConeAutoBonus: 0,
+    connectValue: 0,
+    goldenBall: 0,
     ballValue: 0,
-    ballMultiplier: 0,
-    penalties: 0
+    humanBonus: 0,
+    autoBonus: 0,
+    penalties: 0,
   });
 
   const climbScore = (climb: ClimbType) => {
     switch (climb) {
-      case 'climb':
+      case "climb":
         return pointConfig.fullClimb;
-      case 'touch':
+      case "touch":
         return pointConfig.touchClimb;
       default:
         return 0;
     }
   };
 
-  const calculateTubeScore = (
-    count: number,
-    capped: CapOptions,
-    team: string
-  ) =>
-    (count * pointConfig.pegCone) * (capped === team ? 2 : 1);
+  // const calculateTubeScore = (
+  //   count: number,
+  //   capped: CapOptions,
+  //   team: string,
+  // ) => count * pointConfig.pegCone * (capped === team ? 2 : 1);
+
+  const calculateRocketScore = (rocket: boolean[]) => {
+    let balls = 0;
+
+    let highestLoop = 0;
+    let currentLoop = 0;
+
+    for (const elem of rocket) {
+      if (elem) {
+        balls += 1;
+
+        currentLoop += 1;
+        if (currentLoop > highestLoop) {
+          highestLoop = currentLoop;
+        }
+      } else {
+        currentLoop = 0;
+      }
+    }
+
+    let total = balls * pointConfig.ballValue;
+
+    if (highestLoop >= 3) {
+      total += (highestLoop - 1) * pointConfig.connectValue;
+    }
+
+    return total;
+  };
 
   const calculateScore = (
     team: ScoreData | null,
-    otherTeam: ScoreData | null
+    otherTeam: ScoreData | null,
   ) => {
     if (team === null) {
       return 0;
     }
     let score = 0;
 
-
-
     score += climbScore(team.autoClimb);
     score += climbScore(team.endClime);
 
-    score += calculateTubeScore(
-      team.leftPegCones,
-      team.leftPegCapped,
-      team.teamColor
-    );
-    
-    score += calculateTubeScore(
-      team.rightPegCones,
-      team.rightPegCapped,
-      team.teamColor
-    );
-
-    score += team.groundCones * pointConfig.groundCone;
-    score += team.groundAutoBonus * pointConfig.groundConeAutoBonus;
-    
-
-    score += team.pegAutoBonus * pointConfig.pegConeAutoBonus;
-
-
-    if (team.ballMultiplier) {
-      score += team.balls * pointConfig.ballValue * pointConfig.ballMultiplier;
+    if (team.goldenBall) {
+      score += pointConfig.goldenBall;
     }
-    else
-    {
-      score += team.balls * pointConfig.ballValue; 
+
+    score += calculateRocketScore(team.redRocket);
+    score += calculateRocketScore(team.blueRocket);
+    score += calculateRocketScore(team.blackRocket);
+
+    for (let i = 0; i < team.blueRocket.length; i++) {
+      if (team.redRocket[i] && team.blueRocket[i] && team.blackRocket[i]) {
+        score += (2 * pointConfig.connectValue);
+      }
     }
+
+    score += team.autoBonus * pointConfig.autoBonus;
+    score += team.humanBonus * pointConfig.humanBonus;
 
     if (otherTeam === null) {
       return score;
-    }
-
-    if (otherTeam.leftPegCapped === team.teamColor) {
-      score += calculateTubeScore(otherTeam.leftPegCones, '', team.teamColor);
-    }
-    if (otherTeam.rightPegCapped === team.teamColor) {
-      score += calculateTubeScore(otherTeam.rightPegCones, '', team.teamColor);
     }
 
     score += otherTeam.penalties * pointConfig.penalties;
@@ -122,25 +128,25 @@ function ScoreBoard() {
   };
 
   useEffect(() => {
-    const unsubscribeRed = onSnapshot(doc(db, 'realtime', 'red'), (doc) => {
+    const unsubscribeRed = onSnapshot(doc(db, "realtime", "red"), (doc) => {
       setScore((score) => ({
         ...score,
         red: (doc.data() as ScoreData) ?? null,
       }));
     });
 
-    const unsubscribeBlue = onSnapshot(doc(db, 'realtime', 'blue'), (doc) => {
+    const unsubscribeBlue = onSnapshot(doc(db, "realtime", "blue"), (doc) => {
       setScore((score) => ({
         ...score,
         blue: (doc.data() as ScoreData) ?? null,
       }));
     });
 
-    const unsubscribeRoot = onSnapshot(doc(db, 'realtime', 'root'), (doc) => {
+    const unsubscribeRoot = onSnapshot(doc(db, "realtime", "root"), (doc) => {
       setMatch(doc.data() as MatchData);
     });
 
-    getDoc(doc(db, 'realtime', 'points')).then((doc) => {
+    getDoc(doc(db, "realtime", "points")).then((doc) => {
       setPointConfig(doc.data() as PointsConfig);
     });
 
@@ -164,14 +170,14 @@ function ScoreBoard() {
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor="red"
-            teamName={score.red?.teamName ?? 'Red'}
+            teamName={score.red?.teamName ?? "Red"}
             score={calculateScore(score.red, score.blue)}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor="blue"
-            teamName={score.blue?.teamName ?? 'Blue'}
+            teamName={score.blue?.teamName ?? "Blue"}
             score={calculateScore(score.blue, score.red)}
           />
         </Grid>

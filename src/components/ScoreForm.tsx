@@ -1,39 +1,42 @@
 import {
+  Box,
   Button,
+  ButtonGroup,
   Checkbox,
+  FormControl,
   FormControlLabel,
+  FormLabel,
   Grid,
+  Radio,
+  RadioGroup,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import CounterScore from './CounterScore';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '..';
-import { Add, Remove } from '@mui/icons-material';
-import TubeScore from './TubeScore';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import CounterScore from "./CounterScore";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "..";
+import { Add, Remove } from "@mui/icons-material";
+import TubeScore from "./TubeScore";
 
-export type CapOptions = 'blue' | 'red' | '';
+export type CapOptions = "blue" | "red" | "";
 
-export type ClimbType = 'none' | 'climb' | 'touch';
+export type ClimbType = "none" | "climb" | "touch";
 
 export type ScoreData = {
   teamName: string;
   teamColor: CapOptions;
   autoClimb: ClimbType;
   endClime: ClimbType;
-  leftPegCones: number;
-  leftPegCapped: CapOptions;
-  rightPegCones: number;
-  rightPegCapped: CapOptions;
-  groundCones: number;
-  pegAutoBonus: number;
-  groundAutoBonus: number;
-  balls: number;
-  ballMultiplier: boolean;
+  goldenBall: boolean;
+  humanBonus: number;
+  autoBonus: number;
   penalties: number;
+  redRocket: boolean[];
+  blackRocket: boolean[];
+  blueRocket: boolean[];
 };
 
 interface ScoreFormProps {
@@ -42,24 +45,21 @@ interface ScoreFormProps {
 
 function ScoreForm({ teamColor }: ScoreFormProps) {
   const [score, setScore] = useState<ScoreData>({
-    teamName: '',
+    teamName: "",
     teamColor: teamColor as CapOptions,
-    autoClimb: 'none',
-    endClime: 'none',
-    leftPegCones: 0,
-    leftPegCapped: '',
-    rightPegCones: 0,
-    rightPegCapped: '',
-    groundCones: 0,
-    pegAutoBonus: 0,
-    groundAutoBonus: 0,
-    balls: 0,
-    ballMultiplier: false,
-    penalties: 0
+    autoClimb: "none",
+    endClime: "none",
+    goldenBall: false,
+    humanBonus: 0,
+    autoBonus: 0,
+    penalties: 0,
+    redRocket: [false, false, false, false, false, false],
+    blackRocket: [false, false, false, false, false, false],
+    blueRocket: [false, false, false, false, false, false],
   });
 
   useEffect(() => {
-    setDoc(doc(db, 'realtime', teamColor), score);
+    setDoc(doc(db, "realtime", teamColor), score);
   }, [score, teamColor]);
 
   return (
@@ -81,139 +81,129 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
           <FormControlLabel
             control={
               <Checkbox
-                value={score.ballMultiplier}
+                value={score.goldenBall}
                 onChange={(_, value) => {
                   setScore({
                     ...score,
-                    ballMultiplier: value,
+                    goldenBall: value,
                   });
                 }}
               />
             }
-            label="Ball Multiplier"
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <label>Auto Climb</label>
-          <ToggleButtonGroup
-            value={score.autoClimb}
-            exclusive
-            onChange={(_, value) => {
-              setScore({
-                ...score,
-                autoClimb: value as ClimbType,
-              });
-            }}
-          >
-            <ToggleButton value="climb">Climb</ToggleButton>
-            <ToggleButton value="touch">Touch</ToggleButton>
-            <ToggleButton value="none">None</ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
-
-        <Grid item xs={12}>
-          <CounterScore
-            count={score.groundAutoBonus}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                groundAutoBonus: count,
-              })
-            }
-            teamColor={teamColor}
-            title="Ground Auto Bonus"
-            buttonColor="warning"
+            label="Golden Ball"
           />
         </Grid>
 
         <Grid item xs={12}>
           <CounterScore
-            count={score.pegAutoBonus}
+            count={score.autoBonus}
             setCount={(count) =>
               setScore({
                 ...score,
-                pegAutoBonus: count,
+                autoBonus: count,
               })
             }
             teamColor={teamColor}
-            title="Peg Auto Bonus"
+            title="Auto Bonus"
             buttonColor="secondary"
           />
         </Grid>
 
-        <>
-          <TubeScore
-            count={score.leftPegCones}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                leftPegCones: count,
-              })
-            }
-            capped={score.leftPegCapped}
-            setCap={(capped) =>
-              setScore({
-                ...score,
-                leftPegCapped: capped,
-              })
-            }
-            teamColor={teamColor}
-          />
-          <div style={{ height: '10px' }} />
-          <TubeScore
-            count={score.rightPegCones}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                rightPegCones: count,
-              })
-            }
-            capped={score.rightPegCapped}
-            setCap={(capped) =>
-              setScore({
-                ...score,
-                rightPegCapped: capped,
-              })
-            }
-            teamColor={teamColor}
-          />
-
-        </>
-
         <Grid item xs={12}>
           <CounterScore
-            count={score.balls}
+            count={score.humanBonus}
             setCount={(count) =>
               setScore({
                 ...score,
-                balls: count,
+                humanBonus: count,
               })
             }
             teamColor={teamColor}
-            title="Balls"
+            title="Human Bonus"
             buttonColor="warning"
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <CounterScore
-            count={score.groundCones}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                groundCones: count,
-              })
-            }
-            teamColor={teamColor}
-            title="Ground Cones"
-            buttonColor="secondary"
-          />
-        </Grid>
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            "& > *": {
+              m: 1,
+            },
+          }}
+        >
+          <ButtonGroup orientation="vertical">
+            <Button disabled>Blue</Button>
+            {score.blueRocket.map((value, index) => (
+              <Button
+                key={`${index}`}
+                variant={value ? "contained" : "outlined"}
+                onClick={() => {
+                  const copy = score.blueRocket;
+                  copy[index] = !copy[index];
 
+                  setScore({
+                    ...score,
+                    blueRocket: copy,
+                  });
+                }}
+              >
+                {6 - index}
+              </Button>
+            ))}
+          </ButtonGroup>
+
+          <ButtonGroup orientation="vertical" color="warning">
+            <Button disabled color="warning">
+              Black
+            </Button>
+            {score.blackRocket.map((value, index) => (
+              <Button
+                key={`${index}`}
+                variant={value ? "contained" : "outlined"}
+                onClick={() => {
+                  const copy = score.blackRocket;
+                  copy[index] = !copy[index];
+
+                  setScore({
+                    ...score,
+                    blackRocket: copy,
+                  });
+                }}
+              >
+                {6 - index}
+              </Button>
+            ))}
+          </ButtonGroup>
+
+          <ButtonGroup orientation="vertical" color="error">
+            <Button disabled color="warning">
+              Red
+            </Button>
+            {score.redRocket.map((value, index) => (
+              <Button
+                key={`${index}`}
+                variant={value ? "contained" : "outlined"}
+                onClick={() => {
+                  const copy = score.redRocket;
+                  copy[index] = !copy[index];
+
+                  setScore({
+                    ...score,
+                    redRocket: copy,
+                  });
+                }}
+              >
+                {6 - index}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </Grid>
 
         <Grid item xs={12}>
           <label>End Game Climb</label>
-          <div style={{ width: '10px' }} />
+          <div style={{ width: "10px" }} />
           <ToggleButtonGroup
             value={score.endClime}
             exclusive
@@ -257,7 +247,6 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             <Add />
           </Button>
         </Grid>
-
       </Grid>
     </div>
   );

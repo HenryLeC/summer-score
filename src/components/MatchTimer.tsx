@@ -47,11 +47,6 @@ function MatchTimer() {
   }, []);
 
   const count = useCallback(() => {
-    if (time === 30 && phase === 'auto') {
-      playAuto();
-      console.log('Played Auto Sound');
-    }
-
     setTime((time) => time - 1);
 
     if (time === 1) {
@@ -88,6 +83,12 @@ function MatchTimer() {
   useEffect(() => {
     if (ref.current || !started) clearInterval(ref.current);
     if (!started) return;
+
+    if (time == 30 && phase === 'auto') {
+      console.log('Played Auto Sound');
+      playAuto();
+    }
+
     const id = setInterval(() => {
       count();
     }, 1000);
