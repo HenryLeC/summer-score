@@ -78,13 +78,13 @@ function MatchTimer() {
       playEndGame();
     }
 
-  }, [phase, time, playAuto, playEndAuto, play321, playDriversPickUp, playEnd, playEndGame]);
+  }, [phase, time, playEndAuto, play321, playDriversPickUp, playEnd, playEndGame]);
 
   useEffect(() => {
     if (ref.current || !started) clearInterval(ref.current);
     if (!started) return;
 
-    if (time == 30 && phase === 'auto') {
+    if (time === 30 && phase === 'auto') {
       console.log('Played Auto Sound');
       playAuto();
     }
@@ -93,7 +93,7 @@ function MatchTimer() {
       count();
     }, 1000);
     ref.current = id;
-  }, [started, count]);
+  }, [started, count, phase, playAuto, time]);
 
   return (
     <Card elevation={3} style={{ margin: '0 auto', width: '50%' }}>
