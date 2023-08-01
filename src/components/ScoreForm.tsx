@@ -71,21 +71,24 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             label="Team Name"
           />
         </Grid>
-        <Grid item xs={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                value={score.goldenBall}
-                onChange={(_, value) => {
-                  setScore({
-                    ...score,
-                    goldenBall: value,
-                  });
-                }}
-              />
-            }
-            label="Golden Ball"
-          />
+
+        <Grid item xs={12}>
+          <label>Auto Climb</label>
+          <div style={{ width: "10px" }} />
+          <ToggleButtonGroup
+              value={score.autoClimb}
+              exclusive
+              onChange={(_, value) => {
+                setScore({
+                  ...score,
+                  autoClimb: value as ClimbType,
+                });
+              }}
+            >
+              <ToggleButton value="climb">Climb</ToggleButton>
+              {/* <ToggleButton value="touch">Touch</ToggleButton> */}
+              <ToggleButton value="none">None</ToggleButton>
+            </ToggleButtonGroup>
         </Grid>
 
         <Grid item xs={12}>
@@ -195,6 +198,23 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
           </ButtonGroup>
         </Grid>
 
+        <Grid item xs={6}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={score.goldenBall}
+                onChange={(_, value) => {
+                  setScore({
+                    ...score,
+                    goldenBall: value,
+                  });
+                }}
+              />
+            }
+            label="Golden Ball"
+          />
+        </Grid>
+
         <Grid item xs={12}>
           <label>End Game Climb</label>
           <div style={{ width: "10px" }} />
@@ -209,7 +229,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             }}
           >
             <ToggleButton value="climb">Climb</ToggleButton>
-            <ToggleButton value="touch">Touch</ToggleButton>
+            {/* <ToggleButton value="touch">Touch</ToggleButton> */}
             <ToggleButton value="none">None</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
