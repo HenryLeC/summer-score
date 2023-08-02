@@ -6,6 +6,7 @@ import { db } from "..";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { MatchData } from "./ScoreIndex";
 import MatchTimer from "../components/MatchTimer";
+import FullScreenVideo from "../components/FullScreenVideo";
 
 type FullScore = {
   red: ScoreData | null;
@@ -19,7 +20,7 @@ type PointsConfig = {
   goldenBall: number;
   ballValue: number;
   humanBonus: number;
-  autoBonus: number
+  autoBonus: number;
   penalties: number;
 };
 
@@ -43,6 +44,9 @@ function ScoreBoard() {
     autoBonus: 0,
     penalties: 0,
   });
+
+  const [finished, setFinished] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   const climbScore = (climb: ClimbType) => {
     switch (climb) {
@@ -111,7 +115,7 @@ function ScoreBoard() {
 
     for (let i = 0; i < team.blueRocket.length; i++) {
       if (team.redRocket[i] && team.blueRocket[i] && team.blackRocket[i]) {
-        score += (2 * pointConfig.connectValue);
+        score += 2 * pointConfig.connectValue;
       }
     }
 
@@ -146,6 +150,22 @@ function ScoreBoard() {
       setMatch(doc.data() as MatchData);
     });
 
+    const unsubscribeFinish = onSnapshot(
+      doc(db, "realtime", "timer"),
+      (doc) => {
+        if (doc.data()?.finished === true) {
+          setShowVideo(true);
+          setTimeout(() => {
+            setFinished(true);
+            setOpen(false);
+          }, 1000);
+        } else if (doc.data()?.finished === false) {
+          setFinished(false);
+          setOpen(true);
+        }
+      },
+    );
+
     getDoc(doc(db, "realtime", "points")).then((doc) => {
       setPointConfig(doc.data() as PointsConfig);
     });
@@ -154,31 +174,64 @@ function ScoreBoard() {
       unsubscribeRed();
       unsubscribeBlue();
       unsubscribeRoot();
+      unsubscribeFinish();
     };
   }, []);
 
   const [open, setOpen] = useState(false);
 
+  const blueScore = calculateScore(score.blue, score.red);
+  const redScore = calculateScore(score.red, score.blue);
+  let winner = blueScore > redScore ? "blue" : "red";
+
+  if (blueScore === redScore) {
+    winner = "";
+  }
+
+  const getLead = () => {
+    if (winner === "red") {
+      return "Red Wins";
+    } else if (winner === "blue") {
+      return "Blue Wins";
+    } else {
+      return "It's a Tie!";
+    }
+  };
+
+  const getLeadColor = () => {
+    if (winner === "") {
+      return "purple";
+    }
+
+    return winner;
+  };
+
   return (
     <div>
+      <FullScreenVideo
+        showVideo={showVideo}
+        setShowVideo={setShowVideo}
+        winner={winner}
+      />
       <center>
         <Typography variant="h2" component="div">
           {match.name}
         </Typography>
       </center>
+
       <Grid container spacing={10} padding={10}>
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor="red"
             teamName={score.red?.teamName ?? "Red"}
-            score={calculateScore(score.red, score.blue)}
+            score={redScore}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor="blue"
             teamName={score.blue?.teamName ?? "Blue"}
-            score={calculateScore(score.blue, score.red)}
+            score={blueScore}
           />
         </Grid>
         {open ? (
@@ -189,6 +242,18 @@ function ScoreBoard() {
           <div onClick={() => setOpen(true)}>Open Timer</div>
         )}
       </Grid>
+      {finished && (
+        <Typography
+          variant="h2"
+          sx={{
+            textAlign: "center",
+            fontSize: "75px",
+            color: getLeadColor(),
+          }}
+        >
+          {getLead()}
+        </Typography>
+      )}
     </div>
   );
 }
