@@ -28,6 +28,7 @@ export type ScoreData = {
   humanBonus: number;
   autoBonus: number;
   penalties: number;
+  launchpadBonus: number;
   redRocket: boolean[];
   blackRocket: boolean[];
   blueRocket: boolean[];
@@ -47,6 +48,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     humanBonus: 0,
     autoBonus: 0,
     penalties: 0,
+    launchpadBonus: 0,
     redRocket: [false, false, false, false, false, false],
     blackRocket: [false, false, false, false, false, false],
     blueRocket: [false, false, false, false, false, false],
@@ -196,6 +198,22 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               </Button>
             ))}
           </ButtonGroup>
+        </Grid>
+
+        
+        <Grid item xs={12}>
+          <CounterScore
+            count={score.launchpadBonus}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                launchpadBonus: count,
+              })
+            }
+            teamColor={teamColor}
+            title="Launchpad Bonus"
+            buttonColor="secondary"
+          />
         </Grid>
 
         <Grid item xs={6}>

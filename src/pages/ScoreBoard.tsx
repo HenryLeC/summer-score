@@ -21,6 +21,7 @@ type PointsConfig = {
   ballValue: number;
   humanBonus: number;
   autoBonus: number;
+  launchpadBonus: number;
   penalties: number;
 };
 
@@ -42,6 +43,7 @@ function ScoreBoard() {
     ballValue: 0,
     humanBonus: 0,
     autoBonus: 0,
+    launchpadBonus: 0,
     penalties: 0,
   });
 
@@ -121,6 +123,7 @@ function ScoreBoard() {
 
     score += team.autoBonus * pointConfig.autoBonus;
     score += team.humanBonus * pointConfig.humanBonus;
+    score += team.launchpadBonus * pointConfig.launchpadBonus;
 
     if (otherTeam === null) {
       return score;
