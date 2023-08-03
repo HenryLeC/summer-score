@@ -55,7 +55,7 @@ function MatchTimer() {
         playEndAuto();
         setPhase('wait');
       } else if (phase === 'wait') {
-        setTime(120);
+        setTime(90);
         setPhase('tele');
         //playStart();
       } else if (phase === 'end') {
