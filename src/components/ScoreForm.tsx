@@ -1,37 +1,19 @@
-import {
-  Button,
-  ButtonGroup,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import CounterScore from "./CounterScore";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "..";
-import { Add, Remove } from "@mui/icons-material";
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import CounterScore from './CounterScore';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '..';
+import { Add, Remove } from '@mui/icons-material';
 
-export type CapOptions = "blue" | "red" | "";
-
-export type ClimbType = "none" | "climb" | "touch";
+export type CapOptions = 'blue' | 'red' | '';
 
 export type ScoreData = {
   teamName: string;
   teamColor: CapOptions;
-  autoClimb: ClimbType;
-  endClime: ClimbType;
-  goldenBall: boolean;
-  humanBonus: number;
-  autoBonus: number;
+  s_5: number;
+  s_10: number;
+  s_15: number;
   penalties: number;
-  launchpadBonus: number;
-  redRocket: boolean[];
-  blackRocket: boolean[];
-  blueRocket: boolean[];
 };
 
 interface ScoreFormProps {
@@ -40,22 +22,16 @@ interface ScoreFormProps {
 
 function ScoreForm({ teamColor }: ScoreFormProps) {
   const [score, setScore] = useState<ScoreData>({
-    teamName: "",
+    teamName: '',
     teamColor: teamColor as CapOptions,
-    autoClimb: "none",
-    endClime: "none",
-    goldenBall: false,
-    humanBonus: 0,
-    autoBonus: 0,
+    s_5: 0,
+    s_10: 0,
+    s_15: 0,
     penalties: 0,
-    launchpadBonus: 0,
-    redRocket: [false, false, false, false, false, false],
-    blackRocket: [false, false, false, false, false, false],
-    blueRocket: [false, false, false, false, false, false],
   });
 
   useEffect(() => {
-    setDoc(doc(db, "realtime", teamColor), score);
+    setDoc(doc(db, 'realtime', teamColor), score);
   }, [score, teamColor]);
 
   return (
@@ -70,198 +46,66 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 teamName: event.target.value,
               });
             }}
-            label="Team Name"
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <label>Auto Climb</label>
-          <div style={{ width: "10px" }} />
-          <ToggleButtonGroup
-              value={score.autoClimb}
-              exclusive
-              onChange={(_, value) => {
-                setScore({
-                  ...score,
-                  autoClimb: value as ClimbType,
-                });
-              }}
-            >
-              <ToggleButton value="climb">Climb</ToggleButton>
-              {/* <ToggleButton value="touch">Touch</ToggleButton> */}
-              <ToggleButton value="none">None</ToggleButton>
-            </ToggleButtonGroup>
-        </Grid>
-
-        <Grid item xs={12}>
-          <CounterScore
-            count={score.autoBonus}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                autoBonus: count,
-              })
-            }
-            teamColor={teamColor}
-            title="Auto Bonus"
-            buttonColor="secondary"
+            label='Team Name'
           />
         </Grid>
 
         <Grid item xs={12}>
           <CounterScore
-            count={score.humanBonus}
+            count={score.s_5}
             setCount={(count) =>
               setScore({
                 ...score,
-                humanBonus: count,
+                s_5: count,
               })
             }
             teamColor={teamColor}
-            title="Human Bonus"
-            buttonColor="warning"
+            title='5'
+            buttonColor='secondary'
           />
         </Grid>
 
-        <Grid
-          item
-          sx={{
-            display: "flex",
-            "& > *": {
-              m: 1,
-            },
-          }}
-        >
-          <ButtonGroup orientation="vertical">
-            <Button disabled>Blue</Button>
-            {score.blueRocket.map((value, index) => (
-              <Button
-                key={`${index}`}
-                variant={value ? "contained" : "outlined"}
-                onClick={() => {
-                  const copy = score.blueRocket;
-                  copy[index] = !copy[index];
-
-                  setScore({
-                    ...score,
-                    blueRocket: copy,
-                  });
-                }}
-              >
-                {6 - index}
-              </Button>
-            ))}
-          </ButtonGroup>
-
-          <ButtonGroup orientation="vertical" color="warning">
-            <Button disabled color="warning">
-              Black
-            </Button>
-            {score.blackRocket.map((value, index) => (
-              <Button
-                key={`${index}`}
-                variant={value ? "contained" : "outlined"}
-                onClick={() => {
-                  const copy = score.blackRocket;
-                  copy[index] = !copy[index];
-
-                  setScore({
-                    ...score,
-                    blackRocket: copy,
-                  });
-                }}
-              >
-                {6 - index}
-              </Button>
-            ))}
-          </ButtonGroup>
-
-          <ButtonGroup orientation="vertical" color="error">
-            <Button disabled color="warning">
-              Red
-            </Button>
-            {score.redRocket.map((value, index) => (
-              <Button
-                key={`${index}`}
-                variant={value ? "contained" : "outlined"}
-                onClick={() => {
-                  const copy = score.redRocket;
-                  copy[index] = !copy[index];
-
-                  setScore({
-                    ...score,
-                    redRocket: copy,
-                  });
-                }}
-              >
-                {6 - index}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Grid>
-
-        
         <Grid item xs={12}>
           <CounterScore
-            count={score.launchpadBonus}
+            count={score.s_10}
             setCount={(count) =>
               setScore({
                 ...score,
-                launchpadBonus: count,
+                s_10: count,
               })
             }
             teamColor={teamColor}
-            title="Launchpad Bonus"
-            buttonColor="secondary"
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                value={score.goldenBall}
-                onChange={(_, value) => {
-                  setScore({
-                    ...score,
-                    goldenBall: value,
-                  });
-                }}
-              />
-            }
-            label="Golden Ball"
+            title='10'
+            buttonColor='secondary'
           />
         </Grid>
 
         <Grid item xs={12}>
-          <label>End Game Climb</label>
-          <div style={{ width: "10px" }} />
-          <ToggleButtonGroup
-            value={score.endClime}
-            exclusive
-            onChange={(_, value) => {
+          <CounterScore
+            count={score.s_15}
+            setCount={(count) =>
               setScore({
                 ...score,
-                endClime: value as ClimbType,
-              });
-            }}
-          >
-            <ToggleButton value="climb">Climb</ToggleButton>
-            {/* <ToggleButton value="touch">Touch</ToggleButton> */}
-            <ToggleButton value="none">None</ToggleButton>
-          </ToggleButtonGroup>
+                s_15: count,
+              })
+            }
+            teamColor={teamColor}
+            title='15'
+            buttonColor='secondary'
+          />
         </Grid>
+
         <Grid item xs={4}>
           <label>Penalties:</label>
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="h1" component="div" color={teamColor}>
+          <Typography variant='h1' component='div' color={teamColor}>
             {score.penalties}
           </Typography>
         </Grid>
         <Grid item xs={2}>
           <Button
-            variant="contained"
+            variant='contained'
             onClick={() =>
               setScore({ ...score, penalties: score.penalties - 1 })
             }
@@ -271,7 +115,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
         </Grid>
         <Grid item xs={2}>
           <Button
-            variant="contained"
+            variant='contained'
             onClick={() =>
               setScore({ ...score, penalties: score.penalties + 1 })
             }
