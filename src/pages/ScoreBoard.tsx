@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TeamScorePaper from '../components/TeamScorePaper';
 import { ScoreData } from '../components/ScoreForm';
 import { db } from '..';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { MatchData } from './ScoreIndex';
 import MatchTimer from '../components/MatchTimer';
 import FullScreenVideo from '../components/FullScreenVideo';
@@ -19,18 +19,6 @@ type MatchScores = {
   winner: string;
 };
 
-type PointsConfig = {
-  fullClimb: number;
-  touchClimb: number;
-  connectValue: number;
-  goldenBall: number;
-  ballValue: number;
-  humanBonus: number;
-  autoBonus: number;
-  launchpadBonus: number;
-  penalties: number;
-};
-
 function ScoreBoard() {
   const [score, setScore] = React.useState<FullScore>({
     red: null,
@@ -40,18 +28,6 @@ function ScoreBoard() {
 
   const [match, setMatch] = React.useState<MatchData>({
     name: '',
-  });
-
-  const [pointConfig, setPointConfig] = React.useState<PointsConfig>({
-    fullClimb: 0,
-    touchClimb: 0,
-    connectValue: 0,
-    goldenBall: 0,
-    ballValue: 0,
-    humanBonus: 0,
-    autoBonus: 0,
-    launchpadBonus: 0,
-    penalties: 0,
   });
 
   const [finished, setFinished] = useState(false);
@@ -91,10 +67,6 @@ function ScoreBoard() {
         }
       }
     );
-
-    getDoc(doc(db, 'realtime', 'points')).then((doc) => {
-      setPointConfig(doc.data() as PointsConfig);
-    });
 
     return () => {
       unsubscribeRed();
