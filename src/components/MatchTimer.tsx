@@ -6,7 +6,11 @@ import useSound from 'use-sound';
 
 type MatchPhase = 'auto' | 'wait' | 'tele' | 'end';
 
-function MatchTimer() {
+interface MatchTimerProps {
+  setMatchInProgress: (arg0: boolean) => void;
+}
+
+function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
   const [time, setTime] = useState<number>(30);
   const [started, setStarted] = useState<boolean>(false);
   const [phase, setPhase] = useState<MatchPhase>('auto');
@@ -23,9 +27,7 @@ function MatchTimer() {
   const [playEndAuto] = useSound(
     process.env.PUBLIC_URL + '/audio/End_Auto.mp3'
   );
-  const [play321] = useSound(
-    process.env.PUBLIC_URL + '/audio/3_2_1.mp3'
-  );
+  const [play321] = useSound(process.env.PUBLIC_URL + '/audio/3_2_1.mp3');
   const [playEndGame] = useSound(
     process.env.PUBLIC_URL + '/audio/Start of End Game.mp3'
   );
@@ -36,6 +38,7 @@ function MatchTimer() {
     const unsub = onSnapshot(doc(db, 'realtime', 'timer'), (doc) => {
       if (doc.data()?.start === true) {
         setStarted(true);
+        setMatchInProgress(true);
         setTime(30);
         setPhase('auto');
       }
@@ -44,7 +47,7 @@ function MatchTimer() {
     return () => {
       unsub();
     };
-  }, []);
+  }, [setMatchInProgress]);
 
   const count = useCallback(() => {
     setTime((time) => time - 1);
@@ -60,6 +63,7 @@ function MatchTimer() {
         //playStart();
       } else if (phase === 'end') {
         setTime(0);
+        setMatchInProgress(false);
         playEnd();
         setStarted(false);
       }
@@ -77,11 +81,21 @@ function MatchTimer() {
       setPhase('end');
       playEndGame();
     }
-
-  }, [phase, time, playEndAuto, play321, playDriversPickUp, playEnd, playEndGame]);
+  }, [
+    phase,
+    time,
+    playEndAuto,
+    play321,
+    playDriversPickUp,
+    playEnd,
+    playEndGame,
+    setMatchInProgress,
+  ]);
 
   useEffect(() => {
-    if (ref.current || !started) clearInterval(ref.current);
+    if (ref.current || !started) {
+      clearInterval(ref.current);
+    }
     if (!started) return;
 
     if (time === 30 && phase === 'auto') {

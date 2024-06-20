@@ -13,6 +13,12 @@ type FullScore = {
   blue: ScoreData | null;
 };
 
+type MatchScores = {
+  red: number;
+  blue: number;
+  winner: string;
+};
+
 type PointsConfig = {
   fullClimb: number;
   touchClimb: number;
@@ -30,6 +36,7 @@ function ScoreBoard() {
     red: null,
     blue: null,
   });
+  const [matchInProgress, setMatchInProgress] = React.useState<boolean>(false);
 
   const [match, setMatch] = React.useState<MatchData>({
     name: '',
@@ -49,28 +56,6 @@ function ScoreBoard() {
 
   const [finished, setFinished] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-
-  const calculateScore = (
-    team: ScoreData | null,
-    otherTeam: ScoreData | null
-  ) => {
-    if (team === null) {
-      return 0;
-    }
-    let score = 0;
-
-    score += team.s_5 * 5;
-    score += team.s_10 * 10;
-    score += team.s_15 * 15;
-
-    if (otherTeam === null) {
-      return score;
-    }
-
-    score += otherTeam.penalties * pointConfig.penalties;
-
-    return score;
-  };
 
   useEffect(() => {
     const unsubscribeRed = onSnapshot(doc(db, 'realtime', 'red'), (doc) => {
@@ -119,17 +104,59 @@ function ScoreBoard() {
     };
   }, []);
 
+  const [matchScores, setMatchScores] = React.useState<MatchScores>({
+    blue: 0,
+    red: 0,
+    winner: '',
+  });
+
+  useEffect(() => {
+    const calculateScore = (
+      team: ScoreData | null,
+      otherTeam: ScoreData | null
+    ) => {
+      if (team === null) {
+        return 0;
+      }
+      let score = 0;
+
+      score += team.s_5 * 5;
+      score += team.s_10 * 10;
+      score += team.s_15 * 15;
+
+      if (otherTeam === null) {
+        return score;
+      }
+
+      score += otherTeam.penalties * 10;
+
+      return score;
+    };
+
+    const blueScore = calculateScore(score.blue, score.red);
+    const redScore = calculateScore(score.red, score.blue);
+    let winner = blueScore > redScore ? 'blue' : 'red';
+
+    if (blueScore === redScore) {
+      winner = '';
+    }
+    if (matchInProgress || finished) {
+      setMatchScores({
+        blue: blueScore,
+        red: redScore,
+        winner: winner,
+      });
+    } else {
+      setMatchScores({
+        ...matchScores,
+        winner: winner,
+      });
+    }
+  }, [score, matchInProgress, finished, matchScores]);
+
   const [open, setOpen] = useState(false);
 
-  const blueScore = calculateScore(score.blue, score.red);
-  const redScore = calculateScore(score.red, score.blue);
-  let winner = blueScore > redScore ? 'blue' : 'red';
-
-  if (blueScore === redScore) {
-    winner = '';
-  }
-
-  const getLead = () => {
+  const getLead = (winner: string) => {
     if (winner === 'red') {
       return 'Red Wins';
     } else if (winner === 'blue') {
@@ -139,7 +166,7 @@ function ScoreBoard() {
     }
   };
 
-  const getLeadColor = () => {
+  const getLeadColor = (winner: string) => {
     if (winner === '') {
       return 'purple';
     }
@@ -152,7 +179,7 @@ function ScoreBoard() {
       <FullScreenVideo
         showVideo={showVideo}
         setShowVideo={setShowVideo}
-        winner={winner}
+        winner={matchScores.winner}
       />
       <center>
         <Typography variant='h2' component='div'>
@@ -165,19 +192,19 @@ function ScoreBoard() {
           <TeamScorePaper
             teamColor='red'
             teamName={score.red?.teamName ?? 'Red'}
-            score={redScore}
+            score={matchScores.red}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor='blue'
             teamName={score.blue?.teamName ?? 'Blue'}
-            score={blueScore}
+            score={matchScores.blue}
           />
         </Grid>
         {open ? (
           <Grid item xs={12}>
-            <MatchTimer />
+            <MatchTimer setMatchInProgress={setMatchInProgress} />
           </Grid>
         ) : (
           <div onClick={() => setOpen(true)}>Open Timer</div>
@@ -189,10 +216,10 @@ function ScoreBoard() {
           sx={{
             textAlign: 'center',
             fontSize: '75px',
-            color: getLeadColor(),
+            color: getLeadColor(matchScores.winner),
           }}
         >
-          {getLead()}
+          {getLead(matchScores.winner)}
         </Typography>
       )}
     </div>
