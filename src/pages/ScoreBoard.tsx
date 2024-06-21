@@ -28,6 +28,8 @@ function ScoreBoard() {
 
   const [match, setMatch] = React.useState<MatchData>({
     name: '',
+    red_name: '',
+    blue_name: '',
   });
 
   const [finished, setFinished] = useState(false);
@@ -112,7 +114,7 @@ function ScoreBoard() {
     if (blueScore === redScore) {
       winner = '';
     }
-    if (matchInProgress || finished) {
+    if (matchInProgress || finished || (redScore === 0 && blueScore === 0)) {
       setMatchScores({
         blue: blueScore,
         red: redScore,
@@ -163,14 +165,14 @@ function ScoreBoard() {
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor='red'
-            teamName={score.red?.teamName ?? 'Red'}
+            teamName={match.red_name !== '' ? match.red_name : 'Red'}
             score={matchScores.red}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor='blue'
-            teamName={score.blue?.teamName ?? 'Blue'}
+            teamName={match.blue_name !== '' ? match.blue_name : 'Blue'}
             score={matchScores.blue}
           />
         </Grid>

@@ -1,4 +1,4 @@
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import CounterScore from './CounterScore';
 import { doc, setDoc } from 'firebase/firestore';
@@ -8,7 +8,6 @@ import { Add, Remove } from '@mui/icons-material';
 export type CapOptions = 'blue' | 'red' | '';
 
 export type ScoreData = {
-  teamName: string;
   teamColor: CapOptions;
   s_5: number;
   s_10: number;
@@ -22,7 +21,6 @@ interface ScoreFormProps {
 
 function ScoreForm({ teamColor }: ScoreFormProps) {
   const [score, setScore] = useState<ScoreData>({
-    teamName: '',
     teamColor: teamColor as CapOptions,
     s_5: 0,
     s_10: 0,
@@ -37,19 +35,6 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
   return (
     <div>
       <Grid container spacing={5} padding={10} columns={13}>
-        <Grid item xs={12}>
-          <TextField
-            value={score.teamName}
-            onChange={(event) => {
-              setScore({
-                ...score,
-                teamName: event.target.value,
-              });
-            }}
-            label='Team Name'
-          />
-        </Grid>
-
         <Grid item xs={12}>
           <CounterScore
             count={score.s_5}

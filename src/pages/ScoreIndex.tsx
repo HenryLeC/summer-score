@@ -1,20 +1,25 @@
-import { doc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { db } from "..";
-import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { doc, setDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { db } from '..';
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { CapOptions } from '../components/ScoreForm';
 
 export type MatchData = {
   name: string;
+  red_name: string;
+  blue_name: string;
 };
 
 function ScoreIndex() {
   const [match, setMatch] = useState<MatchData>({
-    name: "",
+    name: '',
+    red_name: '',
+    blue_name: '',
   });
 
   useEffect(() => {
-    setDoc(doc(db, "realtime", "root"), match);
+    setDoc(doc(db, 'realtime', 'root'), match);
   }, [match]);
 
   return (
@@ -22,21 +27,34 @@ function ScoreIndex() {
       <center>
         <h1>Score Index</h1>
         <input
-          type="text"
+          type='text'
+          placeholder='Match Name'
           value={match.name}
-          onChange={(e) => setMatch({ name: e.target.value })}
+          onChange={(e) => setMatch({ ...match, name: e.target.value })}
+        />
+        <input
+          type='text'
+          placeholder='Red Team Name'
+          value={match.red_name}
+          onChange={(e) => setMatch({ ...match, red_name: e.target.value })}
+        />
+        <input
+          type='text'
+          placeholder='Blue Team Name'
+          value={match.blue_name}
+          onChange={(e) => setMatch({ ...match, blue_name: e.target.value })}
         />
         <br />
-        <Link to="/score/red">Red</Link>
+        <Link to='/score/red'>Red</Link>
         <br />
-        <Link to="/score/blue">Blue</Link>
+        <Link to='/score/blue'>Blue</Link>
         <br />
 
         <Button
           onClick={() => {
-            setDoc(doc(db, "realtime", "timer"), { start: true });
+            setDoc(doc(db, 'realtime', 'timer'), { start: true });
             setTimeout(() => {
-              setDoc(doc(db, "realtime", "timer"), { start: false });
+              setDoc(doc(db, 'realtime', 'timer'), { start: false });
             }, 5000);
           }}
         >
@@ -46,7 +64,7 @@ function ScoreIndex() {
 
         <Button
           onClick={() => {
-            setDoc(doc(db, "realtime", "timer"), { finished: true });
+            setDoc(doc(db, 'realtime', 'timer'), { finished: true });
           }}
         >
           Finish Round
@@ -54,7 +72,21 @@ function ScoreIndex() {
 
         <Button
           onClick={() => {
-            setDoc(doc(db, "realtime", "timer"), { finished: false });
+            setDoc(doc(db, 'realtime', 'timer'), { finished: false });
+            setDoc(doc(db, 'realtime', 'red'), {
+              teamColor: 'red' as CapOptions,
+              s_5: 0,
+              s_10: 0,
+              s_15: 0,
+              penalties: 0,
+            });
+            setDoc(doc(db, 'realtime', 'blue'), {
+              teamColor: 'blue' as CapOptions,
+              s_5: 0,
+              s_10: 0,
+              s_15: 0,
+              penalties: 0,
+            });
           }}
         >
           Restart Round
