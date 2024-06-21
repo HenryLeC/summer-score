@@ -50,10 +50,6 @@ function ScoreBoard() {
       }));
     });
 
-    const unsubscribeRoot = onSnapshot(doc(db, 'realtime', 'root'), (doc) => {
-      setMatch(doc.data() as MatchData);
-    });
-
     const unsubscribeFinish = onSnapshot(
       doc(db, 'realtime', 'timer'),
       (doc) => {
@@ -73,10 +69,21 @@ function ScoreBoard() {
     return () => {
       unsubscribeRed();
       unsubscribeBlue();
-      unsubscribeRoot();
       unsubscribeFinish();
     };
   }, []);
+
+  useEffect(() => {
+    const unsubscribeRoot = onSnapshot(doc(db, 'realtime', 'root'), (doc) => {
+      if (!finished) {
+        setMatch(doc.data() as MatchData);
+      }
+    });
+
+    return () => {
+      unsubscribeRoot();
+    };
+  }, [finished]);
 
   const [matchScores, setMatchScores] = React.useState<MatchScores>({
     blue: 0,
