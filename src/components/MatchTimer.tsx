@@ -77,7 +77,7 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
       play321();
     }
 
-    if (time === 31 && phase === 'tele') {
+    if (time === 16 && phase === 'tele') {
       setPhase('end');
       playEndGame();
     }
