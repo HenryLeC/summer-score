@@ -171,16 +171,16 @@ function ScoreBoard() {
       <Grid container spacing={10} padding={10}>
         <Grid item xs={6}>
           <TeamScorePaper
-            teamColor='red'
-            teamName={match.red_name !== '' ? match.red_name : 'Red'}
-            score={matchScores.red}
+            teamColor='blue'
+            teamName={match.blue_name !== '' ? match.blue_name : 'Blue'}
+            score={matchScores.blue}
           />
         </Grid>
         <Grid item xs={6}>
           <TeamScorePaper
-            teamColor='blue'
-            teamName={match.blue_name !== '' ? match.blue_name : 'Blue'}
-            score={matchScores.blue}
+            teamColor='red'
+            teamName={match.red_name !== '' ? match.red_name : 'Red'}
+            score={matchScores.red}
           />
         </Grid>
         {open ? (
