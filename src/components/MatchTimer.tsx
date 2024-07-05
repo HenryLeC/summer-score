@@ -21,13 +21,13 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
   const [playAuto] = useSound(
     process.env.PUBLIC_URL + '/audio/Start Auto_normalized.wav'
   );
-  const [playDriversPickUp] = useSound(
-    process.env.PUBLIC_URL + '/audio/Drivers_Pick_Up.mp3'
-  );
+  // const [playDriversPickUp] = useSound(
+  //   process.env.PUBLIC_URL + '/audio/Drivers_Pick_Up.mp3'
+  // );
   const [playEndAuto] = useSound(
     process.env.PUBLIC_URL + '/audio/End_Auto.mp3'
   );
-  const [play321] = useSound(process.env.PUBLIC_URL + '/audio/3_2_1.mp3');
+  // const [play321] = useSound(process.env.PUBLIC_URL + '/audio/3_2_1.mp3');
   const [playEndGame] = useSound(
     process.env.PUBLIC_URL + '/audio/Start of End Game.mp3'
   );
