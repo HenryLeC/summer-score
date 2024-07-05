@@ -39,7 +39,7 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
       if (doc.data()?.start === true) {
         setStarted(true);
         setMatchInProgress(true);
-        setTime(30);
+        setTime(45);
         setPhase('auto');
       }
     });
@@ -54,11 +54,11 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
 
     if (time === 1) {
       if (phase === 'auto') {
-        setTime(7);
+        setTime(75);
         playEndAuto();
-        setPhase('wait');
+        setPhase('tele');
       } else if (phase === 'wait') {
-        setTime(90);
+        setTime(75);
         setPhase('tele');
         //playStart();
       } else if (phase === 'end') {
@@ -69,13 +69,13 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
       }
     }
 
-    if (time === 7 && phase === 'wait') {
-      playDriversPickUp();
-    }
+    // if (time === 7 && phase === 'wait') {
+    //   playDriversPickUp();
+    // }
 
-    if (time === 4 && phase === 'wait') {
-      play321();
-    }
+    // if (time === 4 && phase === 'wait') {
+    //   play321();
+    // }
 
     if (time === 16 && phase === 'tele') {
       setPhase('end');
