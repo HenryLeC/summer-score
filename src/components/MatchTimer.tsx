@@ -85,8 +85,6 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
     phase,
     time,
     playEndAuto,
-    play321,
-    playDriversPickUp,
     playEnd,
     playEndGame,
     setMatchInProgress,
