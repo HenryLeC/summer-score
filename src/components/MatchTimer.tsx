@@ -39,7 +39,7 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
       if (doc.data()?.start === true) {
         setStarted(true);
         setMatchInProgress(true);
-        setTime(45);
+        setTime(30);
         setPhase('auto');
       }
     });
@@ -54,11 +54,11 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
 
     if (time === 1) {
       if (phase === 'auto') {
-        setTime(75);
+        setTime(120);
         playEndAuto();
         setPhase('tele');
       } else if (phase === 'wait') {
-        setTime(75);
+        setTime(120);
         setPhase('tele');
         //playStart();
       } else if (phase === 'end') {

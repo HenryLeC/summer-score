@@ -12,6 +12,8 @@ export type ScoreData = {
   s_5: number;
   s_10: number;
   s_15: number;
+  autoLow: number;
+  linkBonus: number;
   penalties: number;
 };
 
@@ -25,7 +27,9 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     s_5: 0,
     s_10: 0,
     s_15: 0,
-    penalties: 0,
+    autoLow: 0,
+    linkBonus: 0,
+    penalties: 0
   });
 
   useEffect(() => {
@@ -45,7 +49,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='5'
+            title='low'
             buttonColor='secondary'
           />
         </Grid>
@@ -60,7 +64,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='10'
+            title='high'
             buttonColor='secondary'
           />
         </Grid>
@@ -75,7 +79,37 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='15'
+            title='auto high'
+            buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CounterScore
+            count={score.autoLow}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                autoLow: count,
+              })
+            }
+            teamColor={teamColor}
+            title='auto low'
+            buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CounterScore
+            count={score.linkBonus}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                linkBonus: count,
+              })
+            }
+            teamColor={teamColor}
+            title='link bonus'
             buttonColor='secondary'
           />
         </Grid>

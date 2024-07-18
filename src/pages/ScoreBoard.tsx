@@ -104,6 +104,8 @@ function ScoreBoard() {
       score += team.s_5 * 5;
       score += team.s_10 * 10;
       score += team.s_15 * 15;
+      score += team.autoLow * 10;
+      score += team.linkBonus * 5;
 
       if (otherTeam === null) {
         return score;

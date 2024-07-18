@@ -78,6 +78,8 @@ function ScoreIndex() {
               s_5: 0,
               s_10: 0,
               s_15: 0,
+              autoLow: 0,
+              linkBonus: 0,
               penalties: 0,
             });
             setDoc(doc(db, 'realtime', 'blue'), {
@@ -85,6 +87,8 @@ function ScoreIndex() {
               s_5: 0,
               s_10: 0,
               s_15: 0,
+              autoLow: 0,
+              linkBonus: 0,
               penalties: 0,
             });
           }}
