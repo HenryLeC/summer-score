@@ -101,11 +101,19 @@ function ScoreBoard() {
       }
       let score = 0;
 
-      score += team.s_5 * 5;
-      score += team.s_10 * 10;
-      score += team.s_15 * 15;
+      score += team.low * 5;
+      score += team.high * 10;
       score += team.autoLow * 10;
+      score += team.autoHigh * 15;
       score += team.linkBonus * 5;
+
+      if (team.autoPark === true) {
+        score += 10;
+      }
+
+      if (team.endPark === true) {
+        score += 10;
+      }
 
       if (otherTeam === null) {
         return score;

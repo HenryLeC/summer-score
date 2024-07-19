@@ -18,16 +18,17 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
   const [playEnd] = useSound(
     process.env.PUBLIC_URL + '/audio/Match End_normalized.wav'
   );
+
   const [playAuto] = useSound(
     process.env.PUBLIC_URL + '/audio/Start Auto_normalized.wav'
   );
-  // const [playDriversPickUp] = useSound(
-  //   process.env.PUBLIC_URL + '/audio/Drivers_Pick_Up.mp3'
-  // );
+  const [playDriversPickUp] = useSound(
+    process.env.PUBLIC_URL + '/audio/Drivers_Pick_Up.mp3'
+  );
   const [playEndAuto] = useSound(
     process.env.PUBLIC_URL + '/audio/End_Auto.mp3'
   );
-  // const [play321] = useSound(process.env.PUBLIC_URL + '/audio/3_2_1.mp3');
+  const [play321] = useSound(process.env.PUBLIC_URL + '/audio/3_2_1.mp3');
   const [playEndGame] = useSound(
     process.env.PUBLIC_URL + '/audio/Start of End Game.mp3'
   );
@@ -54,13 +55,9 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
 
     if (time === 1) {
       if (phase === 'auto') {
-        setTime(120);
+        setTime(10);
         playEndAuto();
-        setPhase('tele');
-      } else if (phase === 'wait') {
-        setTime(120);
-        setPhase('tele');
-        //playStart();
+        setPhase('wait');
       } else if (phase === 'end') {
         setTime(0);
         setMatchInProgress(false);
@@ -69,13 +66,18 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
       }
     }
 
-    // if (time === 7 && phase === 'wait') {
-    //   playDriversPickUp();
-    // }
+    if (time === 8 && phase === 'wait') {
+      playDriversPickUp();
+    }
 
-    // if (time === 4 && phase === 'wait') {
-    //   play321();
-    // }
+    if (time === 4 && phase === 'wait') {
+      play321();
+    }
+
+    if (time === 1 && phase === 'wait') {
+      setTime(120);
+      setPhase('tele');
+    }
 
     if (time === 16 && phase === 'tele') {
       setPhase('end');
@@ -87,6 +89,8 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
     playEndAuto,
     playEnd,
     playEndGame,
+    playDriversPickUp,
+    play321,
     setMatchInProgress,
   ]);
 

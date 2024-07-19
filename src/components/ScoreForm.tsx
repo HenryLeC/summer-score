@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import CounterScore from './CounterScore';
 import { doc, setDoc } from 'firebase/firestore';
@@ -9,11 +9,13 @@ export type CapOptions = 'blue' | 'red' | '';
 
 export type ScoreData = {
   teamColor: CapOptions;
-  s_5: number;
-  s_10: number;
-  s_15: number;
+  low: number;
+  high: number;
+  autoHigh: number;
   autoLow: number;
   linkBonus: number;
+  autoPark: boolean;
+  endPark: boolean;
   penalties: number;
 };
 
@@ -24,11 +26,13 @@ interface ScoreFormProps {
 function ScoreForm({ teamColor }: ScoreFormProps) {
   const [score, setScore] = useState<ScoreData>({
     teamColor: teamColor as CapOptions,
-    s_5: 0,
-    s_10: 0,
-    s_15: 0,
+    low: 0,
+    high: 0,
+    autoHigh: 0,
     autoLow: 0,
     linkBonus: 0,
+    autoPark: false,
+    endPark: false,
     penalties: 0
   });
 
@@ -38,53 +42,8 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
 
   return (
     <div>
-      <Grid container spacing={5} padding={10} columns={13}>
-        <Grid item xs={12}>
-          <CounterScore
-            count={score.s_5}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                s_5: count,
-              })
-            }
-            teamColor={teamColor}
-            title='low'
-            buttonColor='secondary'
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <CounterScore
-            count={score.s_10}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                s_10: count,
-              })
-            }
-            teamColor={teamColor}
-            title='high'
-            buttonColor='secondary'
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <CounterScore
-            count={score.s_15}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                s_15: count,
-              })
-            }
-            teamColor={teamColor}
-            title='auto high'
-            buttonColor='secondary'
-          />
-        </Grid>
-
-        <Grid item xs={12}>
+      <Grid container spacing={5} padding={5} columns={11}>
+      <Grid item xs={12}>
           <CounterScore
             count={score.autoLow}
             setCount={(count) =>
@@ -101,6 +60,68 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
 
         <Grid item xs={12}>
           <CounterScore
+            count={score.autoHigh}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                autoHigh: count,
+              })
+            }
+            teamColor={teamColor}
+            title='auto high'
+            buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={6}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={score.autoPark}
+                onChange={(_, value) => {
+                  setScore({
+                    ...score,
+                    autoPark: value,
+                  });
+                }}
+              />
+            }
+            label="Auto Park?"
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CounterScore
+            count={score.low}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                low: count,
+              })
+            }
+            teamColor={teamColor}
+            title='low'
+            buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CounterScore
+            count={score.high}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                high: count,
+              })
+            }
+            teamColor={teamColor}
+            title='high'
+            buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CounterScore
             count={score.linkBonus}
             setCount={(count) =>
               setScore({
@@ -111,6 +132,23 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
             teamColor={teamColor}
             title='link bonus'
             buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={score.endPark}
+                onChange={(_, value) => {
+                  setScore({
+                    ...score,
+                    endPark: value,
+                  });
+                }}
+              />
+            }
+            label="Endgame Park?"
           />
         </Grid>
 
