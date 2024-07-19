@@ -53,18 +53,11 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
   const count = useCallback(() => {
     setTime((time) => time - 1);
 
-    if (time === 1) {
-      if (phase === 'auto') {
+    if (time === 1 && phase === 'auto') {
         setTime(10);
         playEndAuto();
-        setPhase('wait');
-      } else if (phase === 'end') {
-        setTime(0);
-        setMatchInProgress(false);
-        playEnd();
-        setStarted(false);
-      }
-    }
+        setPhase('wait'); 
+    }  
 
     if (time === 8 && phase === 'wait') {
       playDriversPickUp();
@@ -83,6 +76,14 @@ function MatchTimer({ setMatchInProgress }: MatchTimerProps) {
       setPhase('end');
       playEndGame();
     }
+
+    if (time === 1 && phase === 'end') {
+      setTime(0);
+      setMatchInProgress(false);
+      playEnd();
+      setStarted(false);
+    }
+
   }, [
     phase,
     time,

@@ -75,19 +75,23 @@ function ScoreIndex() {
             setDoc(doc(db, 'realtime', 'timer'), { finished: false });
             setDoc(doc(db, 'realtime', 'red'), {
               teamColor: 'red' as CapOptions,
-              s_5: 0,
-              s_10: 0,
-              s_15: 0,
+              low: 0,
+              high: 0,
+              autoHigh: 0,
               autoLow: 0,
+              endPark: false,
+              autoPark: false,
               linkBonus: 0,
               penalties: 0,
             });
             setDoc(doc(db, 'realtime', 'blue'), {
               teamColor: 'blue' as CapOptions,
-              s_5: 0,
-              s_10: 0,
-              s_15: 0,
+              low: 0,
+              high: 0,
+              autoHigh: 0,
               autoLow: 0,
+              endPark: false,
+              autoPark: false,
               linkBonus: 0,
               penalties: 0,
             });
