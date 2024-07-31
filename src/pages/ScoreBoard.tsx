@@ -101,11 +101,12 @@ function ScoreBoard() {
       }
       let score = 0;
 
-      score += team.low * 5;
-      score += team.high * 10;
-      score += team.autoLow * 10;
-      score += team.autoHigh * 15;
-      score += team.linkBonus * 5;
+      score += team.cube * 5;
+      score += team.autoCube * 10;
+
+      if (team.tiltBonus === true) {
+        score += 15;
+      }
 
       if (team.autoPark === true) {
         score += 10;

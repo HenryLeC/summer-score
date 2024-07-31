@@ -9,13 +9,12 @@ export type CapOptions = 'blue' | 'red' | '';
 
 export type ScoreData = {
   teamColor: CapOptions;
-  low: number;
-  high: number;
-  autoHigh: number;
-  autoLow: number;
-  linkBonus: number;
+  cube: number;
+  autoCube: number;
+  teleCount: number;
   autoPark: boolean;
   endPark: boolean;
+  tiltBonus: boolean;
   penalties: number;
 };
 
@@ -26,11 +25,10 @@ interface ScoreFormProps {
 function ScoreForm({ teamColor }: ScoreFormProps) {
   const [score, setScore] = useState<ScoreData>({
     teamColor: teamColor as CapOptions,
-    low: 0,
-    high: 0,
-    autoHigh: 0,
-    autoLow: 0,
-    linkBonus: 0,
+    cube: 0,
+    autoCube: 0,
+    teleCount: 0,
+    tiltBonus: false,
     autoPark: false,
     endPark: false,
     penalties: 0
@@ -43,32 +41,19 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
   return (
     <div>
       <Grid container spacing={5} padding={5} columns={11}>
-      <Grid item xs={12}>
-          <CounterScore
-            count={score.autoLow}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                autoLow: count,
-              })
-            }
-            teamColor={teamColor}
-            title='auto low'
-            buttonColor='secondary'
-          />
-        </Grid>
+
 
         <Grid item xs={12}>
           <CounterScore
-            count={score.autoHigh}
+            count={score.autoCube}
             setCount={(count) =>
               setScore({
                 ...score,
-                autoHigh: count,
+                autoCube: count,
               })
             }
             teamColor={teamColor}
-            title='auto high'
+            title='Auto cube'
             buttonColor='secondary'
           />
         </Grid>
@@ -92,46 +77,48 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
 
         <Grid item xs={12}>
           <CounterScore
-            count={score.low}
+            count={score.cube}
             setCount={(count) =>
               setScore({
                 ...score,
-                low: count,
+                cube: count,
               })
             }
             teamColor={teamColor}
-            title='low'
+            title='Cube'
             buttonColor='secondary'
           />
         </Grid>
 
         <Grid item xs={12}>
           <CounterScore
-            count={score.high}
+            count={score.teleCount}
             setCount={(count) =>
               setScore({
                 ...score,
-                high: count,
+                teleCount: count,
               })
             }
             teamColor={teamColor}
-            title='high'
+            title='Tele Count'
             buttonColor='secondary'
           />
         </Grid>
 
         <Grid item xs={12}>
-          <CounterScore
-            count={score.linkBonus}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                linkBonus: count,
-              })
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={score.tiltBonus}
+                onChange={(_, value) => {
+                  setScore({
+                    ...score,
+                    tiltBonus: value,
+                  });
+                }}
+              />
             }
-            teamColor={teamColor}
-            title='link bonus'
-            buttonColor='secondary'
+            label="Tilt Bonus?"
           />
         </Grid>
 
