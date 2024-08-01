@@ -143,8 +143,8 @@ function ScoreBoard() {
       return team?.hpCube ?? 0;
     };
     
-    const redHPCubes = getRedHP(score.red);
-    const blueHPCubes = getBlueHP(score.blue);
+    const redHPCubes = getRedHP(score.blue);
+    const blueHPCubes = getBlueHP(score.red);
 
     const blueScore = calculateScore(score.blue, score.red);
     const redScore = calculateScore(score.red, score.blue);
@@ -221,7 +221,7 @@ function ScoreBoard() {
             hpCube={matchScores.redHP}
           />
         </Grid>
-        
+
         {open ? (
           <Grid item xs={12}>
             <MatchTimer setMatchInProgress={setMatchInProgress} />

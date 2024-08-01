@@ -91,21 +91,6 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
         </Grid>
 
         <Grid item xs={12}>
-          <CounterScore
-            count={score.hpCube}
-            setCount={(count) =>
-              setScore({
-                ...score,
-                hpCube: count,
-              })
-            }
-            teamColor={teamColor}
-            title='Human Player Cube'
-            buttonColor='secondary'
-          />
-        </Grid>
-
-        <Grid item xs={12}>
           <FormControlLabel
             control={
               <Checkbox

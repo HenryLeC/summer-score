@@ -8,8 +8,13 @@ export type CapOptions = 'blue' | 'red' | '';
 
 export type ScoreData = {
   teamColor: CapOptions;
+  cube: number;
+  autoCube: number;
   hpCube: number;
+  autoPark: boolean;
+  endPark: boolean;
   tiltBonus: boolean;
+  penalties: number;
 };
 
 interface ScoreFormProps {
@@ -19,8 +24,13 @@ interface ScoreFormProps {
 function HPCount({ teamColor }: ScoreFormProps) {
   const [score, setScore] = useState<ScoreData>({
     teamColor: teamColor as CapOptions,
+    cube: 0,
+    autoCube: 0,
     hpCube: 0,
-    tiltBonus: false
+    tiltBonus: false,
+    autoPark: false,
+    endPark: false,
+    penalties: 0
   });
 
   useEffect(() => {
