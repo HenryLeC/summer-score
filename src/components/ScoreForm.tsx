@@ -100,7 +100,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Tele Count'
+            title='Human Player Cube'
             buttonColor='secondary'
           />
         </Grid>
