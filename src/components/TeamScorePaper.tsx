@@ -1,5 +1,4 @@
 import { Paper, Typography } from "@mui/material";
-import HPCount from "./HPCount";
 
 interface TeamScorePaperProps {
   teamName: string;

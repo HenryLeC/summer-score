@@ -1,10 +1,8 @@
-import { Button, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import CounterScore from './CounterScore';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '..';
-import { Add, Remove } from '@mui/icons-material';
-import HPCountForm from '../pages/HPCountForm';
 
 export type CapOptions = 'blue' | 'red' | '';
 

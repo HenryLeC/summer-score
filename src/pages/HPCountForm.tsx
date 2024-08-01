@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import ScoreForm from "../components/ScoreForm";
 import { Typography } from "@mui/material";
 import HPCount from "../components/HPCount";
 
