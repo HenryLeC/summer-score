@@ -11,7 +11,7 @@ export type ScoreData = {
   teamColor: CapOptions;
   cube: number;
   autoCube: number;
-  teleCount: number;
+  hpCube: number;
   autoPark: boolean;
   endPark: boolean;
   tiltBonus: boolean;
@@ -27,7 +27,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     teamColor: teamColor as CapOptions,
     cube: 0,
     autoCube: 0,
-    teleCount: 0,
+    hpCube: 0,
     tiltBonus: false,
     autoPark: false,
     endPark: false,
@@ -92,11 +92,11 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
 
         <Grid item xs={12}>
           <CounterScore
-            count={score.teleCount}
+            count={score.hpCube}
             setCount={(count) =>
               setScore({
                 ...score,
-                teleCount: count,
+                hpCube: count,
               })
             }
             teamColor={teamColor}

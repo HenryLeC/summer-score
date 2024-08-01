@@ -17,6 +17,8 @@ type MatchScores = {
   red: number;
   blue: number;
   winner: string;
+  redHP: number;
+  blueHP: number;
 };
 
 function ScoreBoard() {
@@ -24,6 +26,7 @@ function ScoreBoard() {
     red: null,
     blue: null,
   });
+  
   const [matchInProgress, setMatchInProgress] = React.useState<boolean>(false);
 
   const [match, setMatch] = React.useState<MatchData>({
@@ -40,7 +43,7 @@ function ScoreBoard() {
       setScore((score) => ({
         ...score,
         red: (doc.data() as ScoreData) ?? null,
-      }));
+      }))
     });
 
     const unsubscribeBlue = onSnapshot(doc(db, 'realtime', 'blue'), (doc) => {
@@ -89,6 +92,8 @@ function ScoreBoard() {
     blue: 0,
     red: 0,
     winner: '',
+    redHP: 0,
+    blueHP: 0
   });
 
   useEffect(() => {
@@ -99,8 +104,9 @@ function ScoreBoard() {
       if (team === null) {
         return 0;
       }
-      let score = 0;
 
+      let score = 0;
+      
       score += team.cube * 5;
       score += team.autoCube * 10;
 
@@ -125,8 +131,24 @@ function ScoreBoard() {
       return score;
     };
 
+    const getRedHP = (
+      team: ScoreData | null
+    ): number => {
+      return team?.hpCube ?? 0;
+    };
+
+    const getBlueHP = (
+      team: ScoreData | null
+    ): number => {
+      return team?.hpCube ?? 0;
+    };
+    
+    const redHPCubes = getRedHP(score.red);
+    const blueHPCubes = getBlueHP(score.blue);
+
     const blueScore = calculateScore(score.blue, score.red);
     const redScore = calculateScore(score.red, score.blue);
+
     let winner = blueScore > redScore ? 'blue' : 'red';
 
     if (blueScore === redScore) {
@@ -137,6 +159,8 @@ function ScoreBoard() {
         blue: blueScore,
         red: redScore,
         winner: winner,
+        redHP: redHPCubes,
+        blueHP: blueHPCubes,
       });
     } else {
       setMatchScores({
@@ -185,15 +209,19 @@ function ScoreBoard() {
             teamColor='blue'
             teamName={match.blue_name !== '' ? match.blue_name : 'Blue'}
             score={matchScores.blue}
+            hpCube={matchScores.blueHP}
           />
         </Grid>
+
         <Grid item xs={6}>
           <TeamScorePaper
             teamColor='red'
             teamName={match.red_name !== '' ? match.red_name : 'Red'}
             score={matchScores.red}
+            hpCube={matchScores.redHP}
           />
         </Grid>
+        
         {open ? (
           <Grid item xs={12}>
             <MatchTimer setMatchInProgress={setMatchInProgress} />

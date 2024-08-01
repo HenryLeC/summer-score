@@ -15,6 +15,7 @@ import ScoreFormPage from './pages/ScoreFormPage';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import ScoreIndex from './pages/ScoreIndex';
+import HPCountForm from './pages/HPCountForm';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDmxkCcHdEBmFzXRrpyDp_g1oauaPoiOLQ',
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<ScoreBoard />} />
       <Route path="/score" element={<ScoreIndex />} />
       <Route path="/score/:teamColor" element={<ScoreFormPage />} />
+      <Route path="/score/:teamColor/hp" element={<HPCountForm />} />
     </>
   )
 );
