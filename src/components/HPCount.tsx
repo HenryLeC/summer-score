@@ -6,31 +6,19 @@ import { db } from '..';
 
 export type CapOptions = 'blue' | 'red' | '';
 
-export type ScoreData = {
+export type HPData = {
   teamColor: CapOptions;
-  cube: number;
-  autoCube: number;
   hpCube: number;
-  autoPark: boolean;
-  endPark: boolean;
-  tiltBonus: boolean;
-  penalties: number;
 };
 
-interface ScoreFormProps {
+interface HPFormProps {
   teamColor: string;
 }
 
-function HPCount({ teamColor }: ScoreFormProps) {
-  const [score, setScore] = useState<ScoreData>({
+function HPCount({ teamColor }: HPFormProps) {
+  const [score, setScore] = useState<HPData>({
     teamColor: teamColor as CapOptions,
-    cube: 0,
-    autoCube: 0,
     hpCube: 0,
-    tiltBonus: false,
-    autoPark: false,
-    endPark: false,
-    penalties: 0
   });
 
   useEffect(() => {

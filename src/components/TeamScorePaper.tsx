@@ -16,7 +16,7 @@ function TeamScorePaper({ teamName, teamColor, score, hpCube}: TeamScorePaperPro
           component="div"
           color={teamColor}
           style={{
-            WebkitTextStroke: "2px white",
+            WebkitTextStroke: "1px white",
           }}
         >
           {teamName}
@@ -27,7 +27,7 @@ function TeamScorePaper({ teamName, teamColor, score, hpCube}: TeamScorePaperPro
           component="div"
           color={teamColor}
           style={{
-            WebkitTextStroke: "2px white",
+            WebkitTextStroke: "1px white",
           }}
         >
           {score}
@@ -51,7 +51,7 @@ function TeamScorePaper({ teamName, teamColor, score, hpCube}: TeamScorePaperPro
           component="div"
           color={teamColor}
           style={{
-            WebkitTextStroke: "2px white",
+            WebkitTextStroke: "1px white",
           }}
         >
           {"HP Cubes"}
@@ -62,7 +62,7 @@ function TeamScorePaper({ teamName, teamColor, score, hpCube}: TeamScorePaperPro
           component="div"
           color={teamColor}
           style={{
-            WebkitTextStroke: "2px white",
+            WebkitTextStroke: "1px white",
           }}
         >
           {hpCube}

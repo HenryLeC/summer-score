@@ -12,6 +12,7 @@ export type ScoreData = {
   cube: number;
   autoCube: number;
   hpCube: number;
+  heavyCube: number;
   autoPark: boolean;
   endPark: boolean;
   tiltBonus: boolean;
@@ -28,6 +29,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
     cube: 0,
     autoCube: 0,
     hpCube: 0,
+    heavyCube: 0,
     tiltBonus: false,
     autoPark: false,
     endPark: false,
@@ -53,7 +55,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Auto cube'
+            title='Auto Cube (10 pts)'
             buttonColor='secondary'
           />
         </Grid>
@@ -71,7 +73,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label="Auto Park?"
+            label="Auto Park? (10 pts)"
           />
         </Grid>
 
@@ -85,7 +87,22 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Cube'
+            title='Cube (5 pts)'
+            buttonColor='secondary'
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <CounterScore
+            count={score.heavyCube}
+            setCount={(count) =>
+              setScore({
+                ...score,
+                heavyCube: count,
+              })
+            }
+            teamColor={teamColor}
+            title='Heavy Cube (10 pts)'
             buttonColor='secondary'
           />
         </Grid>
@@ -100,7 +117,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Human Player Cube'
+            title='OPPONENT HP Cube'
             buttonColor='secondary'
           />
         </Grid>
@@ -118,7 +135,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label="Tilt Bonus?"
+            label="Tilt Bonus? (15 pts)"
           />
         </Grid>
 
@@ -135,7 +152,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label="Endgame Park?"
+            label="Endgame Park? (10 pts)"
           />
         </Grid>
 
