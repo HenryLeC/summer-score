@@ -55,7 +55,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Auto Cube (10 pts)'
+            title='Auto Cube'
             buttonColor='secondary'
           />
         </Grid>
@@ -73,7 +73,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label="Auto Park? (10 pts)"
+            label="Auto Park?"
           />
         </Grid>
 
@@ -87,7 +87,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Cube (5 pts)'
+            title='Cube'
             buttonColor='secondary'
           />
         </Grid>
@@ -102,7 +102,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
               })
             }
             teamColor={teamColor}
-            title='Heavy Cube (10 pts)'
+            title='Heavy Cube'
             buttonColor='secondary'
           />
         </Grid>
@@ -135,7 +135,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label="Tilt Bonus? (15 pts)"
+            label="Tilt Bonus?"
           />
         </Grid>
 
@@ -152,7 +152,7 @@ function ScoreForm({ teamColor }: ScoreFormProps) {
                 }}
               />
             }
-            label="Endgame Park? (10 pts)"
+            label="Endgame Park?"
           />
         </Grid>
 
