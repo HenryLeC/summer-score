@@ -15,7 +15,6 @@ import ScoreFormPage from './pages/ScoreFormPage';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import ScoreIndex from './pages/ScoreIndex';
-import HPCountForm from './pages/HPCountForm';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDmxkCcHdEBmFzXRrpyDp_g1oauaPoiOLQ',
