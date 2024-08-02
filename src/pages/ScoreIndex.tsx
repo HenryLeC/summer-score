@@ -76,8 +76,9 @@ function ScoreIndex() {
             setDoc(doc(db, 'realtime', 'red'), {
               teamColor: 'red' as CapOptions,
               cube: 0,
+              heavyCube: 0,
               autoCube: 0,
-              teleCount: 0,
+              hpCube: 0,
               endPark: false,
               autoPark: false,
               tiltBonus: false,
@@ -86,8 +87,9 @@ function ScoreIndex() {
             setDoc(doc(db, 'realtime', 'blue'), {
               teamColor: 'blue' as CapOptions,
               cube: 0,
+              heavyCube: 0,
               autoCube: 0,
-              teleCount: 0,
+              hpCube: 0,
               endPark: false,
               autoPark: false,
               tiltBonus: false,

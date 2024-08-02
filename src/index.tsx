@@ -37,7 +37,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<ScoreBoard />} />
       <Route path="/score" element={<ScoreIndex />} />
       <Route path="/score/:teamColor" element={<ScoreFormPage />} />
-      <Route path="/score/:teamColor/hp" element={<HPCountForm />} />
+      {/* <Route path="/score/:teamColor/hp" element={<HPCountForm />} /> */}
     </>
   )
 );
