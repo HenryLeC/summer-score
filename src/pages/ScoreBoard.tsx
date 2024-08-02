@@ -7,16 +7,10 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { MatchData } from './ScoreIndex';
 import MatchTimer from '../components/MatchTimer';
 import FullScreenVideo from '../components/FullScreenVideo';
-import { HPData } from '../components/HPCount';
 
 type FullScore = {
   red: ScoreData | null;
   blue: ScoreData | null;
-};
-
-type HPScore = {
-  red: HPData | null;
-  blue: HPData | null;
 };
 
 type MatchScores = {
@@ -29,11 +23,6 @@ type MatchScores = {
 
 function ScoreBoard() {
   const [score, setScore] = React.useState<FullScore>({
-    red: null,
-    blue: null,
-  });
-
-  const [hpScore, setHPScore] = React.useState<HPScore>({
     red: null,
     blue: null,
   });
